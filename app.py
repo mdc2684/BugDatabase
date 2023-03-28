@@ -25,7 +25,7 @@ def register():
         'useremail1':useremail1_receive,
         'useremail2':useremail2_receive
     }
-    db.bug.insert_one(doc)
+    db.user.insert_one(doc)
     return jsonify({'msg': '회원가입 완료!'})
 
 @app.route("/register", methods=["GET"])
