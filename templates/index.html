@@ -97,51 +97,33 @@
             display: inline-block;
         }
 
-        #category_search, #query_type {
+        #category_search,
+        #query_type {
             display: inline-block;
             width: 200px;
         }
     </style>
     <script>
         let isEditorOpen = false;
-        let editorMode = 'posting';
-        let modifyingBugId;
+        let editorMode = 'posting'; // 현재 작업이 새로운 데이터 저장인지, 기존 데이터 수정인지 구분하는 변수
+        let modifyingBugId; // 수정 중인 데이터의 id
+
+        let client_user_id = 2
+        let client_user_nickname = '이동환'
 
         $(document).ready(function () {
             listing();
         });
 
+        // read bug data
         function listing() {
             fetch('/bug').then((res) => res.json()).then((data) => {
                 console.log(data['result'])
-                let rows = data['result'];
-                // $('#cards-box').empty();
-                rows.forEach(row => {
-                    // 글 번호, 제목, 카테고리, 닉네임, 내용, 유저 아이디(숨김)
-                    let bug_id = row['id'];
-                    let title = row['title'];
-                    let category = row['category'];
-                    let nickname = row['user_nickname'];
-                    let content = row['content'];
-                    let user_id = row['user_id'];
-                    temp_html = `<div class="col">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <span class="bug_id">#${bug_id}</span>
-                                            <span class="title">${title}</span>
-                                            <span class="category">${category}</span>
-                                            <span class="nickname">${nickname}</span>
-                                            <div class="content">${content}</div>
-                                            <button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
-                                            <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>
-                                        </div>
-                                    </div>
-                                </div>`;
-                    $('#cards-box').append(temp_html)
-                })
+                make_date_from_rows(data['result'])
             })
         }
 
+        // 저장 or 수정 완료 버튼 클릭 이벤트
         function posting() {
             let formData = new FormData();
             let title = $('#title').val();
@@ -150,6 +132,8 @@
             formData.append("title_give", title);
             formData.append("content_give", content);
             formData.append("category_give", category);
+            formData.append("user_id_give", client_user_id);
+            formData.append("user_nickname_give", client_user_nickname);
 
             if (editorMode == 'posting') {
                 fetch('/bug', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
@@ -165,6 +149,7 @@
             }
         }
 
+        // delete bug data
         function deleting(bug_id) {
             let realDelete = confirm('정말 삭제하시겠습니까?')
             if (realDelete) {
@@ -177,6 +162,7 @@
             }
         }
 
+        // 등록 버튼 클릭 이벤트
         function postBtn() {
             if (isEditorOpen) {
                 close_box()
@@ -195,6 +181,7 @@
             isEditorOpen = false;
         }
 
+        // 현재 에디터 모드를 저장 모드로 변경
         function setPosting() {
             editorMode = 'posting'
             $('#confirmBtn').html('저장')
@@ -203,11 +190,13 @@
             $('#category').find('option:first').prop('selected', true);
         }
 
+        // 현재 에디터 모드를 수정 모드로 변경
         function setModifying() {
             editorMode = 'modifying'
             $('#confirmBtn').html('수정')
         }
 
+        // 버그 데이터 수정 버튼 클릭 이벤트
         function modifying(bug_id) {
             if (isEditorOpen == true) {
                 alert('입력창을 닫아주세요.')
@@ -236,6 +225,7 @@
             }
         }
 
+        // search bug data
         function search() {
             let query = $('#query').val()
             let category = $('#category_search').val()
@@ -250,35 +240,43 @@
                 formData.append("query_type_give", query_type);
 
                 fetch('/bug_search', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
-                    $('#cards-box').empty();
+                    $('#cards-box').empty()
                     console.log(data['result'])
-                    let rows = data['result'];
-                    // $('#cards-box').empty();
-                    rows.forEach(row => {
-                        // 글 번호, 제목, 카테고리, 닉네임, 내용, 유저 아이디(숨김)
-                        let bug_id = row['id'];
-                        let title = row['title'];
-                        let category = row['category'];
-                        let nickname = row['user_nickname'];
-                        let content = row['content'];
-                        let user_id = row['user_id'];
-                        temp_html = `<div class="col">
-                                        <div class="card h-100">
-                                            <div class="card-body">
-                                                <span class="bug_id">#${bug_id}</span>
-                                                <span class="title">${title}</span>
-                                                <span class="category">${category}</span>
-                                                <span class="nickname">${nickname}</span>
-                                                <div class="content">${content}</div>
-                                                <button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
-                                                <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>
-                                            </div>
-                                        </div>
-                                    </div>`;
-                        $('#cards-box').append(temp_html)
-                    })
+                    make_date_from_rows(data['result'])
                 })
             }
+        }
+
+        // bug data rows를 바탕으로 html을 그려줌
+        function make_date_from_rows(rows) {
+            rows.forEach(row => {
+                // 필요 데이터
+                // 글 번호, 제목, 카테고리, 닉네임, 내용, 유저 아이디(숨김)
+                let bug_id = row['id'];
+                let title = row['title'];
+                let category = row['category'];
+                let nickname = row['user_nickname'];
+                let content = row['content'];
+                let user_id = row['user_id'];
+                let updateDeleteBtnHtml = ''
+                if (client_user_id == user_id) {
+                    updateDeleteBtnHtml = `<button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
+                                          <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>`
+                }
+                temp_html = `<div class="col">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <span class="bug_id">#${bug_id}</span>
+                                        <span class="title">${title}</span>
+                                        <span class="category">${category}</span>
+                                        <span class="nickname">${nickname}</span>
+                                        <div class="content">${content}</div>
+                                        ${updateDeleteBtnHtml}
+                                    </div>
+                                </div>
+                            </div>`;
+                $('#cards-box').append(temp_html)
+            })
         }
     </script>
 </head>
@@ -354,6 +352,23 @@
             </div>
         </div>
     </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </body>
 
 </html>
