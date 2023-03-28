@@ -80,9 +80,14 @@
 
             let userpwd = $('#userpwd').val()
             var spe = userpwd.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+            var num = userpwd.search(/[0-9]/g);
+            var eng = userpwd.search(/[a-z]/ig);
 
             if (userpwd.search(/\s/) != -1) {
                 alert("비밀번호는 공백 없이 입력해주세요.");
+                return false;
+            } else if (num < 0 || eng < 0 || spe < 0) {
+                alert("비밀번호는 영문,숫자, 특수문자를 혼합하여 입력해주세요.");
                 return false;
             }
             else if
@@ -90,22 +95,16 @@
 
                 alert("비밀번호는 8자리 ~ 20자리 이내로 입력해주세요.");
                 return false;
-            }          
-
-            else {
+            } else {
                 console.log("통과");
-
             }
-
-
             let userid = $('#userid').val()
-
             if
                 (userid.length < 1 || userid.length > 20) {
 
                 alert("ID는 1글자 ~ 20글자 이내로 입력해주세요.");
                 return false;
-            }          
+            }
 
 
 
