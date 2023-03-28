@@ -22,36 +22,45 @@
         }
 
         .mytitle {
-            width: 100%;
-            height: 250px;
-
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');
-            background-position: center;
-            background-size: cover;
-
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            padding: 1rem;
             color: white;
-
+            background: teal;
+            font-weight: bold;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            z-index: 1;
         }
 
-        .mytitle>button {
-            width: 200px;
-            height: 50px;
-
-            background-color: transparent;
-            color: white;
-
-            border-radius: 50px;
-            border: 1px solid white;
-
-            margin-top: 10px;
+        body {
+            padding-top: 75px;
         }
 
-        .mytitle>button:hover {
-            border: 2px solid white;
+
+        .btn_4 {
+
+            background-color: #f7f7f7;
+            border: none;
+            color: rgb(0, 0, 0);
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn_4:hover {
+            background-color: rgb(7, 156, 156);
+
         }
 
         .mycomment {
@@ -66,7 +75,7 @@
 
         .mypost {
             width: 95%;
-            max-width: 500px;
+            max-width: 1000px;
             margin: 20px auto 0px auto;
             padding: 20px;
             box-shadow: 0px 0px 3px 0px gray;
@@ -88,9 +97,11 @@
         }
 
         .search_ui {
-            margin: 20px auto 0px auto;
-            width: 95%;
-            max-width: 1200px;
+            margin: 20px auto 20px auto;
+            width: 80%;
+            height: 80px;
+            position: relative;
+            top: 20px;
         }
 
         #search_bar {
@@ -101,6 +112,122 @@
         #query_type {
             display: inline-block;
             width: 200px;
+        }
+
+        .mycards {
+            margin: 50px auto 20px auto;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .category,
+        .nickname {
+            font-weight: 500;
+        }
+
+        button {
+            background-color: #eee;
+            color: #444;
+        }
+
+        .modifyBtn,
+        .deleteBtn {
+            background-color: #f2f2f2;
+            border: none;
+            border-radius: 15px;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 16px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modifyBtn:hover,
+        .deleteBtn:hover {
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+
+        .search_ui {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .form-select {
+            width: 100%;
+            max-width: 150px;
+            height: 40px;
+            font-size: 14px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .form-floating {
+            flex-grow: 1;
+            height: 40px;
+            background-color: transparent;
+        }
+
+        .form-floating input {
+            height: 100%;
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            background-color: transparent;
+        }
+
+        .form-floating label {
+            top: 0;
+            left: 0;
+            font-size: 14px;
+            padding: 0.5rem;
+            pointer-events: none;
+            position: absolute;
+            transition: 0.3s ease-out;
+        }
+
+        .form-floating input:focus~label,
+        .form-floating input:not(:placeholder-shown)~label {
+            top: -1rem;
+            font-size: 12px;
+            color: #ffffff;
+        }
+
+        .btn {
+            height: 40px;
+            min-width: 70px;
+            font-size: 14px;
+            border-radius: 10px;
+            border: none;
+            background-color: #0d6efd;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #0b5ed7;
         }
     </style>
     <script>
@@ -242,6 +369,7 @@
                 fetch('/bug_search', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
                     $('#cards-box').empty()
                     console.log(data['result'])
+
                     make_date_from_rows(data['result'])
                 })
             }
@@ -278,14 +406,26 @@
                 $('#cards-box').append(temp_html)
             })
         }
+
+        function resizeTextArea() {
+            var textarea = document.getElementById("content");
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+
     </script>
 </head>
 
 <body>
-    <div class="mytitle">
+    <!-- 상단 바 -->
+    <header class="mytitle">
         <h1>버그 데이터베이스</h1>
-        <button onclick="postBtn()">버그 등록하기</button>
-    </div>
+        <nav>
+            <button class="btn_4" onclick="postBtn()">버그 등록하기</button>
+        </nav>
+    </header>
+    <!-- 게시글 작성 -->
     <div class="mypost" id="post-box">
         <div class="form-floating mb-3">
             <input id="title" type="email" class="form-control" placeholder="name@example.com">
@@ -304,7 +444,8 @@
             </select>
         </div>
         <div class="form-floating">
-            <textarea id="content" class="form-control" placeholder="Leave a comment here"></textarea>
+            <textarea id="content" class="form-control" placeholder="Leave a comment here"
+                oninput="resizeTextArea()"></textarea>
             <label for="floatingTextarea2">내용</label>
         </div>
         <div class="mybtns">
@@ -312,41 +453,53 @@
             <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
         </div>
     </div>
+    <!-- 검색 -->
     <div class="search_ui">
-        <div class="form-floating mb-3" id="search_bar">
-            <input id="query" type="email" class="form-control" placeholder=".">
-            <label>검색어</label>
+        <div class="input-group">
+            <select class="form-select" id="category_search">
+                <option selected>카테고리</option>
+                <option value="python">python</option>
+                <option value="html">html</option>
+                <option value="css">css</option>
+                <option value="javascript">javascript</option>
+                <option value="프론트엔드">프론트엔드</option>
+                <option value="백엔드">백엔드</option>
+            </select>
+            <select class="form-select" id="query_type">
+                <option selected>내용</option>
+                <option value="제목">제목</option>
+                <option value="작성자">작성자</option>
+                <option value="내용+제목">내용+제목</option>
+                <option value="내용+제목+작성자">내용+제목+작성자</option>
+            </select>
+            <div class="form-floating mb-3" id="search_bar">
+                <input id="query" type="email" class="form-control" placeholder=".">
+                <label>Search..</label>
+            </div>
+            <button class="btn btn-outline-secondary" type="button" onclick="search()">검색</button>
         </div>
-        <select class="form-select" id="category_search">
-            <option selected>카테고리</option>
-            <option value="python">python</option>
-            <option value="html">html</option>
-            <option value="css">css</option>
-            <option value="javascript">javascript</option>
-            <option value="프론트엔드">프론트엔드</option>
-            <option value="백엔드">백엔드</option>
-        </select>
-        <select class="form-select" id="query_type">
-            <option selected>내용</option>
-            <option value="제목">제목</option>
-            <option value="작성자">작성자</option>
-            <option value="내용+제목">내용+제목</option>
-            <option value="내용+제목+작성자">내용+제목+작성자</option>
-        </select>
-        <button onclick="search()">검색</button>
     </div>
+
+    <!-- 게시글 -->
     <div class="mycards">
         <div class="row row-cols-1 row-cols-md-1 g-1" id="cards-box">
             <div class="col">
                 <div class="card h-100">
-                    <div class="card-body">
-                        <span class="bug_id">#글 번호</span>
-                        <span class="title">제목</span>
-                        <span class="category">카테고리</span>
-                        <span class="nickname">닉네임</span>
-                        <div class="content">내용</div>
-                        <button class="modifyBtn" onclick="modifying()">수정</button>
-                        <button class="deleteBtn">삭제</button>
+                    <div class="card-body d-flex justify-content-between">
+                        <div class="left-section">
+                            <span class="bug_id">#글 번호</span>
+                            <span class="title">제목</span>
+                            <span class="category">카테고리</span>
+                            <span class="nickname">닉네임</span>
+                            <details>
+                                <summary>내용 보기</summary>
+                                <p class="content">내용</p>
+                            </details>
+                        </div>
+                        <div class="right-section">
+                            <button class="modifyBtn" onclick="modifying()">수정</button>
+                            <button class="deleteBtn">삭제</button>
+                        </div>
                     </div>
                 </div>
             </div>
