@@ -6,14 +6,11 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 ca = certifi.where()
 client = MongoClient(
-    'mongodb+srv://sparta:test@cluster0.jzm1gqj.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
-
-
+    'mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 
 @app.route('/')
 def home():
    return render_template('index.html')
-
 
 # client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
@@ -63,7 +60,7 @@ def login():
       userid_receive = request.form['userid']
       userpw_receive = request.form['userpw']
       
-      user = db.bugdatabase.find_one({'userid': userid_receive})
+      user = db.user.find_one({'userid': userid_receive})
       if user and user['userpw'] == userpw_receive:
          session['userid'] = userid_receive
          return redirect(url_for('index'))
@@ -146,7 +143,6 @@ def register():
     userpwd_receive = request.form['userpwd_give']
     useremail1_receive = request.form['useremail1_give']
     useremail2_receive = request.form['useremail2_give']
-    
 
     doc = {
         'userid':userid_receive,
@@ -155,7 +151,7 @@ def register():
         'useremail1':useremail1_receive,
         'useremail2':useremail2_receive
     }
-    db.bug.insert_one(doc)
+    db.user.insert_one(doc)
     return jsonify({'msg': '회원가입 완료!'})
 
 @app.route("/register", methods=["GET"])
@@ -169,9 +165,6 @@ def login_form():
 @app.route("/login", methods=["POST"])
 def login():
    return jsonify({'msg': '로그인 완료!'})
-
-
-
 
 # paging read와 search에 넣기
 def paging():
