@@ -5,6 +5,10 @@ from pymongo import MongoClient
 client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
 
+offset = 10 # 한 페이지에 들어갈 데이터 수
+page_num = 5 # 페이징 버튼에 들어갈 버튼 수
+page = 1 # 현재 페이지
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -36,7 +40,7 @@ def insert_bug():
 # read bug data
 @app.route("/bug", methods=["GET"])
 def bug_get():
-    all_bugs = list(db.bugs.find({},{'_id':False}))
+    all_bugs = list(db.bugs.find({},{'_id':False}).skip((page-1)*offset).limit(offset))
     return jsonify({'result':all_bugs})
 
 # update bug data
@@ -102,11 +106,13 @@ def bug_search():
     if (category_receive != '카테고리'):
         doc['category'] = category_receive
 
-    all_bugs = list(db.bugs.find(doc,{'_id':False}))
+    all_bugs = list(db.bugs.find(doc,{'_id':False}).skip((page-1)*offset).limit(offset))
     return jsonify({'result':all_bugs})
 
 # paging read와 search에 넣기
 def paging():
+    bug_count = db.bugs.count_documents()
+    total_page_num = bug_count 
     return 0
 
 if __name__ == '__main__':
