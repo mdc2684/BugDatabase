@@ -5,8 +5,7 @@ from pymongo import MongoClient
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 ca = certifi.where()
-client = MongoClient(
-    'mongodb+srv://sparta:test@cluster0.jzm1gqj.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+# client = MongoClient('mongodb+srv://sparta:test@cluster0.jzm1gqj.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 
 
 
@@ -15,7 +14,7 @@ def home():
    return render_template('index.html')
 
 
-# client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
+client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbsparta
 
 offset = 10 # 한 페이지에 들어갈 데이터 수
@@ -155,7 +154,7 @@ def register():
         'useremail1':useremail1_receive,
         'useremail2':useremail2_receive
     }
-    db.bug.insert_one(doc)
+    db.user.insert_one(doc)
     return jsonify({'msg': '회원가입 완료!'})
 
 @app.route("/register", methods=["GET"])
