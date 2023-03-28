@@ -8,14 +8,15 @@ ca = certifi.where()
 client = MongoClient(
     'mongodb+srv://sparta:test@cluster0.jzm1gqj.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 
-db = client['dbbugdatabase']
+
 
 @app.route('/')
 def home():
    return render_template('index.html')
 
+
 # client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
-# db = client.dbsparta
+db = client.dbsparta
 
 offset = 10 # 한 페이지에 들어갈 데이터 수
 page_num = 5 # 페이징 버튼에 들어갈 버튼 수
@@ -137,6 +138,40 @@ def bug_search():
 
     all_bugs = list(db.bugs.find(doc,{'_id':False}).skip((page-1)*offset).limit(offset))
     return jsonify({'result':all_bugs})
+
+@app.route("/register", methods=["POST"])
+def register():
+    userid_receive = request.form['userid_give']
+    usernickname_receive = request.form['usernickname_give']
+    userpwd_receive = request.form['userpwd_give']
+    useremail1_receive = request.form['useremail1_give']
+    useremail2_receive = request.form['useremail2_give']
+    
+
+    doc = {
+        'userid':userid_receive,
+        'usernickname': usernickname_receive,
+        'userpwd': userpwd_receive,
+        'useremail1':useremail1_receive,
+        'useremail2':useremail2_receive
+    }
+    db.bug.insert_one(doc)
+    return jsonify({'msg': '회원가입 완료!'})
+
+@app.route("/register", methods=["GET"])
+def register_form():
+   return render_template('register.html')
+
+@app.route("/login", methods=["GET"])
+def login_form():
+   return render_template('login.html')
+
+@app.route("/login", methods=["POST"])
+def login():
+   return jsonify({'msg': '로그인 완료!'})
+
+
+
 
 # paging read와 search에 넣기
 def paging():
