@@ -78,6 +78,18 @@
         }
         function register() {
 
+            var pw = $("#userpwd").val();
+            if (pw.length < 8 || pw.length > 20) {
+
+                alert("비밀번호는 8자리 ~ 20자리 이내로 입력해주세요.");
+                return false;
+            } else {
+                console.log("통과");
+                
+            }
+
+
+
             let userid = $('#userid').val()
             let userpwd = $('#userpwd').val()
             let usernickname = $('#usernickname').val()
