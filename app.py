@@ -1,9 +1,21 @@
-from flask import Flask, render_template, request, jsonify
-app = Flask(__name__)
-
+from flask import Flask, render_template, request, jsonify, session, flash, redirect, url_for
+import certifi
 from pymongo import MongoClient
-client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
-db = client.dbsparta
+
+app = Flask(__name__)
+app.secret_key = 'secret_key'
+ca = certifi.where()
+client = MongoClient(
+    'mongodb+srv://sparta:test@cluster0.jzm1gqj.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+
+db = client['dbbugdatabase']
+
+@app.route('/')
+def home():
+   return render_template('index.html')
+
+# client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
+# db = client.dbsparta
 
 offset = 10 # 한 페이지에 들어갈 데이터 수
 page_num = 5 # 페이징 버튼에 들어갈 버튼 수
@@ -42,6 +54,23 @@ def insert_bug():
 def bug_get():
     all_bugs = list(db.bugs.find({},{'_id':False}).skip((page-1)*offset).limit(offset))
     return jsonify({'result':all_bugs})
+    
+# 로그인
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+   if request.method == 'POST':
+      userid_receive = request.form['userid']
+      userpw_receive = request.form['userpw']
+      
+      user = db.bugdatabase.find_one({'userid': userid_receive})
+      if user and user['userpw'] == userpw_receive:
+         session['userid'] = userid_receive
+         return redirect(url_for('index'))
+      else:
+         flash('Invalid')
+         return redirect(url_for('login'))
+   else:
+      return render_template('login.html')
 
 # update bug data
 @app.route("/bug_update", methods=["POST"])
@@ -114,6 +143,6 @@ def paging():
     bug_count = db.bugs.count_documents()
     total_page_num = bug_count 
     return 0
-
+    
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
