@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
-    <title>스파르타 피디아</title>
+    <title>버그 데이터베이스</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 
@@ -37,7 +37,7 @@
             justify-content: center;
         }
 
-        .mytitle > button {
+        .mytitle>button {
             width: 200px;
             height: 50px;
 
@@ -50,7 +50,7 @@
             margin-top: 10px;
         }
 
-        .mytitle > button:hover {
+        .mytitle>button:hover {
             border: 2px solid white;
         }
 
@@ -82,8 +82,24 @@
 
             margin-top: 20px;
         }
-        .mybtns > button {
+
+        .mybtns>button {
             margin-right: 10px;
+        }
+
+        .search_ui {
+            margin: 20px auto 0px auto;
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        #search_bar {
+            display: inline-block;
+        }
+
+        #category_search, #query_type {
+            display: inline-block;
+            width: 200px;
         }
     </style>
     <script>
@@ -91,8 +107,8 @@
         let editorMode = 'posting';
         let modifyingBugId;
 
-        $(document).ready(function(){
-          listing();
+        $(document).ready(function () {
+            listing();
         });
 
         function listing() {
@@ -117,7 +133,7 @@
                                             <span class="nickname">${nickname}</span>
                                             <div class="content">${content}</div>
                                             <button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
-                                            <button class="deleteBtn">삭제</button>
+                                            <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>
                                         </div>
                                     </div>
                                 </div>`;
@@ -127,7 +143,7 @@
         }
 
         function posting() {
-			let formData = new FormData();
+            let formData = new FormData();
             let title = $('#title').val();
             let content = $('#content').val();
             let category = $('#category').val();
@@ -136,29 +152,45 @@
             formData.append("category_give", category);
 
             if (editorMode == 'posting') {
-                fetch('/bug', {method : "POST", body : formData}).then((res) => res.json()).then((data) => {
-                    alert('저장 완료')
+                fetch('/bug', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    alert(data['msg'])
                     window.location.reload();
                 })
             } else if (editorMode == 'modifying') {
                 formData.append('bug_id_give', modifyingBugId)
-                fetch('/bug_update', {method : "POST", body : formData}).then((res) => res.json()).then((data) => {
-                    alert('수정 완료')
+                fetch('/bug_update', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    alert(data['msg'])
                     window.location.reload();
                 })
             }
         }
 
-        function delete_post() {
-
+        function deleting(bug_id) {
+            let realDelete = confirm('정말 삭제하시겠습니까?')
+            if (realDelete) {
+                let formData = new FormData();
+                formData.append('bug_id_give', bug_id)
+                fetch('/bug_delete', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    alert(data['msg'])
+                    window.location.reload();
+                })
+            }
         }
 
-        function open_box(){
+        function postBtn() {
+            if (isEditorOpen) {
+                close_box()
+            } else {
+                open_box()
+            }
+        }
+
+        function open_box() {
             $('#post-box').show()
             isEditorOpen = true;
             setPosting()
         }
-        function close_box(){
+        function close_box() {
             $('#post-box').hide()
             isEditorOpen = false;
         }
@@ -188,7 +220,7 @@
 
                 let formData = new FormData();
                 formData.append("bug_id_give", bug_id);
-                fetch('/modify', {method : "POST", body : formData}).then((res) => res.json()).then((data) => {
+                fetch('/modify', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
                     console.log(data['result'])
                     let target_bug = data['result'];
                     let bug_id = target_bug['id'];
@@ -203,23 +235,92 @@
                 })
             }
         }
+
+        function search() {
+            let query = $('#query').val()
+            let category = $('#category_search').val()
+            let query_type = $('#query_type').val()
+            if (query == '' && category == '카테고리') {
+                $('#cards-box').empty();
+                listing()
+            } else {
+                let formData = new FormData();
+                formData.append("query_give", query);
+                formData.append("category_give", category);
+                formData.append("query_type_give", query_type);
+
+                fetch('/bug_search', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    $('#cards-box').empty();
+                    console.log(data['result'])
+                    let rows = data['result'];
+                    // $('#cards-box').empty();
+                    rows.forEach(row => {
+                        // 글 번호, 제목, 카테고리, 닉네임, 내용, 유저 아이디(숨김)
+                        let bug_id = row['id'];
+                        let title = row['title'];
+                        let category = row['category'];
+                        let nickname = row['user_nickname'];
+                        let content = row['content'];
+                        let user_id = row['user_id'];
+                        temp_html = `<div class="col">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <span class="bug_id">#${bug_id}</span>
+                                                <span class="title">${title}</span>
+                                                <span class="category">${category}</span>
+                                                <span class="nickname">${nickname}</span>
+                                                <div class="content">${content}</div>
+                                                <button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
+                                                <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        $('#cards-box').append(temp_html)
+                    })
+                })
+            }
+        }
     </script>
 </head>
 
 <body>
-<div class="mytitle">
-    <h1>내 생애 최고의 영화들</h1>
-    <button onclick="open_box()">영화 기록하기</button>
-</div>
-<div class="mypost" id="post-box">
-    <div class="form-floating mb-3">
-        <input id="title" type="email" class="form-control" placeholder="name@example.com">
-        <label>제목</label>
+    <div class="mytitle">
+        <h1>버그 데이터베이스</h1>
+        <button onclick="postBtn()">버그 등록하기</button>
     </div>
-    <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">카테고리</label>
-        <select class="form-select" id="category">
-            <option selected>-- 선택하기 --</option>
+    <div class="mypost" id="post-box">
+        <div class="form-floating mb-3">
+            <input id="title" type="email" class="form-control" placeholder="name@example.com">
+            <label>제목</label>
+        </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">카테고리</label>
+            <select class="form-select" id="category">
+                <option selected>-- 선택하기 --</option>
+                <option value="python">python</option>
+                <option value="html">html</option>
+                <option value="css">css</option>
+                <option value="javascript">javascript</option>
+                <option value="프론트엔드">프론트엔드</option>
+                <option value="백엔드">백엔드</option>
+            </select>
+        </div>
+        <div class="form-floating">
+            <textarea id="content" class="form-control" placeholder="Leave a comment here"></textarea>
+            <label for="floatingTextarea2">내용</label>
+        </div>
+        <div class="mybtns">
+            <button onclick="posting()" type="button" class="btn btn-dark" id="confirmBtn">저장</button>
+            <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+        </div>
+    </div>
+    <div class="search_ui">
+        <div class="form-floating mb-3" id="search_bar">
+            <input id="query" type="email" class="form-control" placeholder=".">
+            <label>검색어</label>
+        </div>
+        <select class="form-select" id="category_search">
+            <option selected>카테고리</option>
             <option value="python">python</option>
             <option value="html">html</option>
             <option value="css">css</option>
@@ -227,85 +328,32 @@
             <option value="프론트엔드">프론트엔드</option>
             <option value="백엔드">백엔드</option>
         </select>
+        <select class="form-select" id="query_type">
+            <option selected>내용</option>
+            <option value="제목">제목</option>
+            <option value="작성자">작성자</option>
+            <option value="내용+제목">내용+제목</option>
+            <option value="내용+제목+작성자">내용+제목+작성자</option>
+        </select>
+        <button onclick="search()">검색</button>
     </div>
-    <div class="form-floating">
-        <textarea id="content" class="form-control" placeholder="Leave a comment here"></textarea>
-        <label for="floatingTextarea2">내용</label>
-    </div>
-    <div class="mybtns">
-        <button onclick="posting()" type="button" class="btn btn-dark" id="confirmBtn">저장</button>
-        <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
-    </div>
-</div>
-<div class="mycards">
-    <div class="row row-cols-1 row-cols-md-1 g-1" id="cards-box">
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <span class="bug_id">#글 번호</span>
-                    <span class="title">제목</span>
-                    <span class="category">카테고리</span>
-                    <span class="nickname">닉네임</span>
-                    <div class="content">내용</div>
-                    <button class="modifyBtn" onclick="modifying()">수정</button>
-                    <button class="deleteBtn">삭제</button>
+    <div class="mycards">
+        <div class="row row-cols-1 row-cols-md-1 g-1" id="cards-box">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <span class="bug_id">#글 번호</span>
+                        <span class="title">제목</span>
+                        <span class="category">카테고리</span>
+                        <span class="nickname">닉네임</span>
+                        <div class="content">내용</div>
+                        <button class="modifyBtn" onclick="modifying()">수정</button>
+                        <button class="deleteBtn">삭제</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <input type="hidden" value="a">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                    <button>삭제</button>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 
 </html>

@@ -30,6 +30,13 @@ def movie_post():
 
     return jsonify({'msg':'저장 완료!'})
 
+@app.route("/bug_delete", methods=["POST"])
+def bug_delete():
+    bug_id_receive = int(request.form['bug_id_give'])
+    db.bugs.delete_one({'id':bug_id_receive})
+
+    return jsonify({'msg':'삭제 완료!'})
+
 @app.route("/bug_update", methods=["POST"])
 def bug_update():
     title_receive = request.form['title_give']
@@ -52,7 +59,7 @@ def bug_update():
 
 
 @app.route("/bug", methods=["GET"])
-def movie_get():
+def bug_get():
     all_bugs = list(db.bugs.find({},{'_id':False}))
     return jsonify({'result':all_bugs})
 
@@ -63,6 +70,33 @@ def modify_bug():
     target_bug = db.bugs.find_one({'id':int(bug_id_receive)}, {'_id':False})
     # target_bug = {'id':bug_id_receive, 'title':'몰라'}
     return jsonify({'result':target_bug})
+
+@app.route("/bug_search", methods=["POST"])
+def bug_search():
+    query_receive = request.form['query_give']
+    category_receive = request.form['category_give']
+    query_type_receive = request.form['query_type_give']
+
+    doc = {}
+    if query_type_receive == '내용' :
+        doc['content'] = {'$regex':query_receive}
+    elif query_type_receive == '제목' :
+        doc['title'] = {'$regex':query_receive}
+    elif query_type_receive == '작성자' :
+        doc['user_nickname'] = {'$regex':query_receive}
+    elif query_type_receive == '내용+제목' :
+        doc['content'] = {'$regex':query_receive}
+        doc['title'] = {'$regex':query_receive}
+    elif query_type_receive == '내용+제목+작성자' :
+        doc['content'] = {'$regex':query_receive}
+        doc['title'] = {'$regex':query_receive}
+        doc['user_nickname'] = {'$regex':query_receive}
+
+    if (category_receive != '카테고리'):
+        doc['category'] = category_receive
+
+    all_bugs = list(db.bugs.find(doc,{'_id':False}))
+    return jsonify({'result':all_bugs})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
