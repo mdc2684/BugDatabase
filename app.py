@@ -8,14 +8,8 @@ ca = certifi.where()
 client = MongoClient(
     'mongodb+srv://sparta:test@cluster0.jzm1gqj.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 
-db = client['dbbugdatabase']
-
-@app.route('/')
-def home():
-   return render_template('index.html')
-
 # client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
-# db = client.dbsparta
+db = client.dbsparta
 
 offset = 10 # 한 페이지에 들어갈 데이터 수
 page_num = 5 # 페이징 버튼에 들어갈 버튼 수
