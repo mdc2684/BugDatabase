@@ -2,26 +2,24 @@ from flask import Flask, render_template, request, jsonify, session, flash, redi
 import certifi
 from pymongo import MongoClient
 
+import hashlib
+
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 ca = certifi.where()
-client = MongoClient(
-    'mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+
+client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+# client = MongoClient('mongodb+srv://sparta:test@cluster0.gya4p0t.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 
 @app.route('/')
 def home():
-   return render_template('index.html')
+   return render_template('index.html', session=session)
 
-# client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
 
 offset = 10 # 한 페이지에 들어갈 데이터 수
 page_num = 5 # 페이징 버튼에 들어갈 버튼 수
 page = 1 # 현재 페이지
-
-@app.route('/')
-def home():
-    return render_template('index.html')
 
 # create bug data
 @app.route("/bug", methods=["POST"])
@@ -48,27 +46,42 @@ def insert_bug():
     return jsonify({'msg':'저장 완료!'})
 
 # read bug data
-@app.route("/bug", methods=["GET"])
+@app.route("/get_bug", methods=["POST"])
 def bug_get():
+    page = int(request.form['page_give'])
+    bug_count = db.bugs.estimated_document_count()
+    subdata = {'bug_count':bug_count}
     all_bugs = list(db.bugs.find({},{'_id':False}).skip((page-1)*offset).limit(offset))
-    return jsonify({'result':all_bugs})
+    return jsonify({'result':all_bugs, 'subdata':subdata})
     
 # 로그인
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
    if request.method == 'POST':
       userid_receive = request.form['userid']
-      userpw_receive = request.form['userpw']
-      
-      user = db.user.find_one({'userid': userid_receive})
-      if user and user['userpw'] == userpw_receive:
+      userpwd_receive = request.form['userpwd']
+
+      userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
+
+      user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
+
+      if user['userpwd'] == userpwd_hash:
          session['userid'] = userid_receive
-         return redirect(url_for('index'))
+         session['user_index'] = user['user_index']
+         session['user_nickname'] = user['usernickname']
+         return render_template('index.html')
       else:
-         flash('Invalid')
+         flash('회원 정보가 일치하지 않습니다.')
          return redirect(url_for('login'))
    else:
       return render_template('login.html')
+# 로그아웃
+@app.route("/logout")
+def logout():
+    session.clear()
+    return render_template('index.html')
+
 
 # update bug data
 @app.route("/bug_update", methods=["POST"])
@@ -113,6 +126,7 @@ def bug_search():
     query_receive = request.form['query_give']
     category_receive = request.form['category_give']
     query_type_receive = request.form['query_type_give']
+    page = int(request.form['page_give'])
 
     doc = {}
     # 내용, 제목, 작성자 별로 검색할 수 있음.
@@ -134,20 +148,31 @@ def bug_search():
         doc['category'] = category_receive
 
     all_bugs = list(db.bugs.find(doc,{'_id':False}).skip((page-1)*offset).limit(offset))
-    return jsonify({'result':all_bugs})
+    bug_count = len(all_bugs)
+    subdata = {'bug_count':bug_count}
+    return jsonify({'result':all_bugs, 'subdata':subdata})
 
 @app.route("/register", methods=["POST"])
 def register():
+    
     userid_receive = request.form['userid_give']
     usernickname_receive = request.form['usernickname_give']
     userpwd_receive = request.form['userpwd_give']
     useremail1_receive = request.form['useremail1_give']
     useremail2_receive = request.form['useremail2_give']
 
+
+    userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
+
+
+    userindex = db.auto_increment.find_one()['user_index']
+    db.auto_increment.update_one({'user_index':userindex}, {'$set':{'user_index':userindex+1}})
+
     doc = {
+        'user_index':userindex+1,
         'userid':userid_receive,
         'usernickname': usernickname_receive,
-        'userpwd': userpwd_receive,
+        'userpwd': userpwd_hash,
         'useremail1':useremail1_receive,
         'useremail2':useremail2_receive
     }
@@ -158,18 +183,10 @@ def register():
 def register_form():
    return render_template('register.html')
 
-@app.route("/login", methods=["GET"])
-def login_form():
-   return render_template('login.html')
-
-@app.route("/login", methods=["POST"])
-def login():
-   return jsonify({'msg': '로그인 완료!'})
-
 # paging read와 search에 넣기
 def paging():
     bug_count = db.bugs.count_documents()
-    total_page_num = bug_count 
+    total_page_num = bug_count / offset + 1
     return 0
     
 if __name__ == '__main__':
