@@ -8,8 +8,12 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 ca = certifi.where()
 
-client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
-# client = MongoClient('mongodb+srv://sparta:test@cluster0.gya4p0t.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+
+client = MongoClient(
+    'mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+
+#client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+#client = MongoClient('mongodb+srv://sparta:test@cluster0.gya4p0t.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 
 @app.route('/')
 def home():
