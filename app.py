@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session, flash, redirect, url_for
-import certifi
+import certifi, hashlib, json
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -58,11 +58,11 @@ def login():
       userpw_receive = request.form['userpwd']
 
       user = db.user.find_one({'userid': userid_receive})
-      if user and user['userpwd'] == userpw_receive:
+      if user and hashlib.sha256(userpw_receive.encode()).hexdigest() == user['userpwd']:
          session['userid'] = userid_receive
          return render_template('index.html')
       else:
-         flash('회원 정보가 일치하지 않습니다.')
+         flash('회원 정보가 없습니다.')
          return redirect(url_for('login'))
    else:
       return render_template('login.html')
@@ -146,11 +146,11 @@ def register():
     userpwd_receive = request.form['userpwd_give']
     useremail1_receive = request.form['useremail1_give']
     useremail2_receive = request.form['useremail2_give']
-
+    hashed_pwd = hashlib.sha256(userpwd_receive.encode()).hexdigest()
     doc = {
         'userid':userid_receive,
+        'userpwd':hashed_pwd,
         'usernickname': usernickname_receive,
-        'userpwd': userpwd_receive,
         'useremail1':useremail1_receive,
         'useremail2':useremail2_receive
     }
