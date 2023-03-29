@@ -57,7 +57,6 @@ def bug_get():
     return jsonify({'result':all_bugs, 'subdata':subdata})
     
 # 로그인
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
    if request.method == 'POST':
