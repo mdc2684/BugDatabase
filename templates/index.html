@@ -368,8 +368,8 @@
         let editorMode = 'posting'; // 현재 작업이 새로운 데이터 저장인지, 기존 데이터 수정인지 구분하는 변수
         let modifyingBugId; // 수정 중인 데이터의 id
 
-        let client_user_id = 2
-        let client_user_nickname = '이동환'
+        let client_user_id = parseInt("{{ session['user_index' ]}}")
+        let client_user_nickname = "{{ session['user_nickname' ]}}"
 
         let offset = 10 // 한 페이지에 들어갈 데이터 수
         let page_button_num = 5 // 페이징 버튼에 들어갈 버튼 수
@@ -530,7 +530,7 @@
                 let content = row['content'];
                 let user_id = row['user_id'];
                 let updateDeleteBtnHtml = ''
-                if ("{{session['user_index']}}" == user_id) {
+                if (client_user_id == user_id) {
                     updateDeleteBtnHtml = `<button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
                                           <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>`
                 }

@@ -8,8 +8,8 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 ca = certifi.where()
 
-#client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
-client = MongoClient('mongodb+srv://sparta:test@cluster0.gya4p0t.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+# client = MongoClient('mongodb+srv://sparta:test@cluster0.gya4p0t.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 
 @app.route('/')
 def home():
@@ -68,8 +68,8 @@ def login():
 
       if user['userpwd'] == userpwd_hash:
          session['userid'] = userid_receive
-         session['user_index']
-         session['user_nickname']
+         session['user_index'] = user['user_index']
+         session['user_nickname'] = user['usernickname']
          return render_template('index.html')
       else:
          flash('회원 정보가 일치하지 않습니다.')
