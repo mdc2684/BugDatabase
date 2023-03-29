@@ -9,8 +9,8 @@ ca = certifi.where()
 client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbsparta
 
-offset = 10 # 한 페이지에 들어갈 데이터 수
-page_num = 5 # 페이징 버튼에 들어갈 버튼 수
+offset = 2 # 한 페이지에 들어갈 데이터 수
+page_num = 2 # 페이징 버튼에 들어갈 버튼 수
 page = 1 # 현재 페이지
 
 @app.route('/')
@@ -42,10 +42,13 @@ def insert_bug():
     return jsonify({'msg':'저장 완료!'})
 
 # read bug data
-@app.route("/bug", methods=["GET"])
+@app.route("/get_bug", methods=["POST"])
 def bug_get():
+    page = int(request.form['page_give'])
+    bug_count = db.bugs.estimated_document_count()
+    subdata = {'bug_count':bug_count}
     all_bugs = list(db.bugs.find({},{'_id':False}).skip((page-1)*offset).limit(offset))
-    return jsonify({'result':all_bugs})
+    return jsonify({'result':all_bugs, 'subdata':subdata})
     
 # 로그인
 @app.route('/login', methods=['GET', 'POST'])
@@ -107,6 +110,7 @@ def bug_search():
     query_receive = request.form['query_give']
     category_receive = request.form['category_give']
     query_type_receive = request.form['query_type_give']
+    page = int(request.form['page_give'])
 
     doc = {}
     # 내용, 제목, 작성자 별로 검색할 수 있음.
@@ -128,7 +132,9 @@ def bug_search():
         doc['category'] = category_receive
 
     all_bugs = list(db.bugs.find(doc,{'_id':False}).skip((page-1)*offset).limit(offset))
-    return jsonify({'result':all_bugs})
+    bug_count = len(all_bugs)
+    subdata = {'bug_count':bug_count}
+    return jsonify({'result':all_bugs, 'subdata':subdata})
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -155,7 +161,7 @@ def register_form():
 # paging read와 search에 넣기
 def paging():
     bug_count = db.bugs.count_documents()
-    total_page_num = bug_count 
+    total_page_num = bug_count / offset + 1
     return 0
     
 if __name__ == '__main__':
