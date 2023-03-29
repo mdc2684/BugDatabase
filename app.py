@@ -19,10 +19,6 @@ offset = 10 # 한 페이지에 들어갈 데이터 수
 page_num = 5 # 페이징 버튼에 들어갈 버튼 수
 page = 1 # 현재 페이지
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
 # create bug data
 @app.route("/bug", methods=["POST"])
 def insert_bug():
@@ -58,17 +54,23 @@ def bug_get():
 def login():
    if request.method == 'POST':
       userid_receive = request.form['userid']
-      userpw_receive = request.form['userpw']
-      
+      userpw_receive = request.form['userpwd']
+
       user = db.user.find_one({'userid': userid_receive})
-      if user and user['userpw'] == userpw_receive:
+      if user and user['userpwd'] == userpw_receive:
          session['userid'] = userid_receive
-         return redirect(url_for('index'))
+         return render_template('index.html')
       else:
-         flash('Invalid')
+         flash('회원 정보가 일치하지 않습니다.')
          return redirect(url_for('login'))
    else:
       return render_template('login.html')
+# 로그아웃
+@app.route("/logout")
+def logout():
+    session.clear()
+    return render_template('index.html')
+
 
 # update bug data
 @app.route("/bug_update", methods=["POST"])
@@ -158,14 +160,6 @@ def register():
 def register_form():
    return render_template('register.html')
 
-@app.route("/login", methods=["GET"])
-def login_form():
-   return render_template('login.html')
-
-@app.route("/login", methods=["POST"])
-def login():
-   return jsonify({'msg': '로그인 완료!'})
-
 # paging read와 search에 넣기
 def paging():
     bug_count = db.bugs.count_documents()
@@ -173,4 +167,4 @@ def paging():
     return 0
     
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5070, debug=True)

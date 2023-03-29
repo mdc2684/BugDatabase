@@ -420,7 +420,7 @@
 <body>
     <!-- 상단 바 -->
     <header class="mytitle">
-        <h1>버그 데이터베이스</h1>
+        <h1>버그 데이터베이스 {{session['userid']}} <a href="/logout">로그아웃</a></h1>
         <nav>
             <button class="btn_4" onclick="postBtn()">버그 등록하기</button>
         </nav>
@@ -526,5 +526,3 @@
 
 
 </html>
-
-
