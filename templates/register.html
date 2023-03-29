@@ -15,13 +15,8 @@
 
     <title>버그 데이터베이스</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <style>
-        * {
-            font-family: "Noto Serif KR", serif;
-        }
-
         .mypic {
             width: 100%;
             height: 100vh;
@@ -41,6 +36,10 @@
             justify-content: center;
         }
 
+        body {
+            line-height: 2.5;
+            font-size: 14px;
+        }
 
         .mypost {
             width: 95%;
@@ -64,6 +63,7 @@
         .form_control {
             margin-top: 20px;
         }
+
 
         .mybtn>button {
             margin: 20px 20px 0px 0px
@@ -89,7 +89,7 @@
                 (userpwd.length < 8 || userpwd.length > 20) {
                 alert("비밀번호는 8자리 ~ 20자리 이내로 입력해주세요.");
                 return false;
-            }          
+            }
             else {
                 console.log("통과");
             }
@@ -98,7 +98,7 @@
                 (userid.length < 1 || userid.length > 20) {
                 alert("ID는 1글자 ~ 20글자 이내로 입력해주세요.");
                 return false;
-            }          
+            }
             let usernickname = $('#usernickname').val()
             let useremail1 = $('#useremail1').val()
             let useremail2 = $('#useremail2').val()
@@ -196,7 +196,6 @@
 
 </body>
 
-=======
 <!DOCTYPE html>
 <html lang="en">
 
@@ -263,6 +262,7 @@
         .form_control {
             margin-top: 20px;
         }
+
 
         .mybtn>button {
             margin: 20px 20px 0px 0px
@@ -393,10 +393,10 @@
     </div>
 
     <div class="mybtn">
-        <button onclick="register()" type="button" class="btn btn-success">
+        <button onclick="register()" type="button" class="btn btn-success btn-block">
             Sign Up
         </button>
-        <button onclick="back()" type="button" class="btn btn-danger">
+        <button onclick="back()" type="button" class="btn btn-danger btn-block">
             Cancel
         </button>
     </div>
@@ -405,4 +405,5 @@
     </div>
 
 </body>
+
 </html>
