@@ -184,6 +184,9 @@
             cursor: pointer;
         }
 
+        .right-section {
+            float: right;
+        }
         .search_ui {
             width: 100%;
             max-width: 600px;
@@ -325,7 +328,18 @@
         .input-group .btn {
             z-index: 0;
         }
-
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
         .bug_id {
             font-weight: bold;
@@ -520,6 +534,7 @@
 
         // bug data rows를 바탕으로 html을 그려줌
         function make_date_from_rows(rows) {
+            $('#cards-box').empty()
             rows.forEach(row => {
                 // 필요 데이터
                 // 글 번호, 제목, 카테고리, 닉네임, 내용, 유저 아이디(숨김)
@@ -531,21 +546,34 @@
                 let user_id = row['user_id'];
                 let updateDeleteBtnHtml = ''
                 if (client_user_id == user_id) {
-                    updateDeleteBtnHtml = `<button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
-                                          <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>`
+                    updateDeleteBtnHtml = `<div class="right-section">
+                        <button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
+                        <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>
+                    </div>`
                 }
                 temp_html = `<div class="col">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <span class="bug_id">#${bug_id}</span>
-                                        <span class="title">${title}</span>
-                                        <span class="category">${category}</span>
-                                        <span class="nickname">${nickname}</span>
-                                        <div class="content">${content}</div>
-                                        ${updateDeleteBtnHtml}
-                                    </div>
-                                </div>
-                            </div>`;
+                    <div class="card h-100">
+                        <div class="card-body d-flex justify-content-between">
+                            <div class="left-section">
+                                <span class="bug_id">#${bug_id}</span>
+                                <h4 class="card-title">${title}</h4>
+                                <h6 class="card-subtitle mb-2 text-muted">${category}</h6>
+                                <p class="card-text"><small class="text-muted">작성자: ${nickname}</small></p>
+                            </div>
+                            ${updateDeleteBtnHtml}
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseContent${bug_id}" aria-expanded="false" aria-controls="collapseContent${bug_id}">
+                                내용 보기
+                            </button>
+                        </div>
+                        <div class="collapse" id="collapseContent${bug_id}">
+                            <div class="card-body">
+                                <p class="content">${content}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
                 $('#cards-box').append(temp_html)
             })
         }
