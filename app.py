@@ -55,7 +55,7 @@ def bug_get():
     page = int(request.form['page_give'])
     bug_count = db.bugs.estimated_document_count()
     subdata = {'bug_count':bug_count}
-    all_bugs = list(db.bugs.find({},{'_id':False}).skip((page-1)*offset).limit(offset))
+    all_bugs = list(db.bugs.find({},{'_id':False}).sort('id',-1).skip((page-1)*offset).limit(offset))
     return jsonify({'result':all_bugs, 'subdata':subdata})
     
 # 로그인
@@ -151,7 +151,7 @@ def bug_search():
     if (category_receive != '카테고리'):
         doc['category'] = category_receive
 
-    all_bugs = list(db.bugs.find(doc,{'_id':False}).skip((page-1)*offset).limit(offset))
+    all_bugs = list(db.bugs.find(doc,{'_id':False}).sort(id,-1).skip((page-1)*offset).limit(offset))
     bug_count = len(all_bugs)
     subdata = {'bug_count':bug_count}
     return jsonify({'result':all_bugs, 'subdata':subdata})
