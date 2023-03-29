@@ -5,9 +5,8 @@ from pymongo import MongoClient
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 ca = certifi.where()
-client = MongoClient(
-    'mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
-
+#client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+client = MongoClient('mongodb+srv://sparta:test@cluster0.gya4p0t.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
 @app.route('/')
 def home():
    return render_template('index.html')
@@ -140,13 +139,18 @@ def bug_search():
 
 @app.route("/register", methods=["POST"])
 def register():
+    
     userid_receive = request.form['userid_give']
     usernickname_receive = request.form['usernickname_give']
     userpwd_receive = request.form['userpwd_give']
     useremail1_receive = request.form['useremail1_give']
     useremail2_receive = request.form['useremail2_give']
 
+    userindex = db.auto_increment.find_one()['user_index']
+    db.auto_increment.update_one({'user_index':userindex}, {'$set':{'user_index':userindex+1}})
+
     doc = {
+        'userindex':userindex+1,
         'userid':userid_receive,
         'usernickname': usernickname_receive,
         'userpwd': userpwd_receive,
@@ -167,4 +171,4 @@ def paging():
     return 0
     
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5070, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
