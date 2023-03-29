@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, flash, redirect, url_for
-import certifi
+import certifi, hashlib
 from pymongo import MongoClient
-
-import hashlib
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
@@ -59,17 +57,14 @@ def bug_get():
     return jsonify({'result':all_bugs, 'subdata':subdata})
     
 # 로그인
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
    if request.method == 'POST':
       userid_receive = request.form['userid']
       userpwd_receive = request.form['userpwd']
-
       userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
       user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
-
-      if user['userpwd'] == userpwd_hash:
+      if user and user['userpwd'] == userpwd_hash:
          session['userid'] = userid_receive
          return render_template('index.html')
       else:
@@ -77,6 +72,7 @@ def login():
          return render_template('login.html')
    else:
       return render_template('login.html')
+     
 # 로그아웃
 @app.route("/logout")
 def logout():
