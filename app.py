@@ -64,7 +64,8 @@ def login():
       userpwd_receive = request.form['userpwd']
       userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
       user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
-      if user and user['userpwd'] == userpwd_hash:
+
+      if user:
          session['userid'] = userid_receive
          return render_template('index.html')
       else:
