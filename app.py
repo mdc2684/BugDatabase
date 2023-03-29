@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify, session, flash, redi
 import certifi
 from pymongo import MongoClient
 
+import hashlib
+
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 ca = certifi.where()
@@ -53,10 +55,13 @@ def bug_get():
 def login():
    if request.method == 'POST':
       userid_receive = request.form['userid']
-      userpw_receive = request.form['userpwd']
+      userpwd_receive = request.form['userpwd']
 
-      user = db.user.find_one({'userid': userid_receive})
-      if user and user['userpwd'] == userpw_receive:
+      userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
+
+      user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
+
+      if user and user['userpwd'] == userpwd_receive:
          session['userid'] = userid_receive
          return render_template('index.html')
       else:
@@ -146,14 +151,18 @@ def register():
     useremail1_receive = request.form['useremail1_give']
     useremail2_receive = request.form['useremail2_give']
 
+
+    userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
+
+
     userindex = db.auto_increment.find_one()['user_index']
     db.auto_increment.update_one({'user_index':userindex}, {'$set':{'user_index':userindex+1}})
 
     doc = {
-        'userindex':userindex+1,
+        'user_index':userindex+1,
         'userid':userid_receive,
         'usernickname': usernickname_receive,
-        'userpwd': userpwd_receive,
+        'userpwd': userpwd_hash,
         'useremail1':useremail1_receive,
         'useremail2':useremail2_receive
     }
