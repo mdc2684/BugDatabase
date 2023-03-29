@@ -53,7 +53,7 @@ def bug_get():
     page = int(request.form['page_give'])
     bug_count = db.bugs.estimated_document_count()
     subdata = {'bug_count':bug_count}
-    all_bugs = list(db.bugs.find({},{'_id':False}).skip((page-1)*offset).limit(offset))
+    all_bugs = list(db.bugs.find({},{'_id':False}).sort('id',-1).skip((page-1)*offset).limit(offset))
     return jsonify({'result':all_bugs, 'subdata':subdata})
     
 # 로그인
@@ -64,7 +64,8 @@ def login():
       userpwd_receive = request.form['userpwd']
       userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
       user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
-      if user and user['userpwd'] == userpwd_hash:
+
+      if user:
          session['userid'] = userid_receive
          return render_template('index.html')
       else:
@@ -144,7 +145,7 @@ def bug_search():
     if (category_receive != '카테고리'):
         doc['category'] = category_receive
 
-    all_bugs = list(db.bugs.find(doc,{'_id':False}).skip((page-1)*offset).limit(offset))
+    all_bugs = list(db.bugs.find(doc,{'_id':False}).sort(id,-1).skip((page-1)*offset).limit(offset))
     bug_count = len(all_bugs)
     subdata = {'bug_count':bug_count}
     return jsonify({'result':all_bugs, 'subdata':subdata})
