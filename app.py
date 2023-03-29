@@ -61,7 +61,7 @@ def login():
 
       user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
 
-      if user and user['userpwd'] == userpwd_receive:
+      if user['userpwd'] == userpwd_hash:
          session['userid'] = userid_receive
          return render_template('index.html')
       else:
