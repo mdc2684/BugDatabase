@@ -1,1 +1,783 @@
-###dsjssj
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/4fc6b960de.js" crossorigin="anonymous"></script>
+
+    <title>버그 데이터베이스</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mytitle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            padding: 1rem;
+            color: white;
+            background: teal;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        body {
+            padding-top: 75px;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .btn-round {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f2f2f2;
+            color: #666;
+            border: none;
+            z-index: 1;
+        }
+
+        .btn-round:hover {
+            cursor: pointer;
+            background-color: #e6e6e6;
+        }
+
+        .btn_4 {
+
+            background-color: #f7f7f7;
+            border: none;
+            color: rgb(0, 0, 0);
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn_4:hover {
+            background-color: rgb(7, 156, 156);
+
+        }
+
+        .mycomment {
+            color: gray;
+        }
+
+        .mycards {
+            margin: 20px auto 0px auto;
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 1000px;
+            margin: 20px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+
+            display: none;
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .mybtns>button {
+            margin-right: 10px;
+        }
+
+        .search_ui {
+            margin: 20px auto 20px auto;
+            width: 80%;
+            height: 80px;
+            position: relative;
+            top: 20px;
+        }
+
+        #search_bar {
+            display: inline-block;
+        }
+
+        #category_search,
+        #query_type {
+            display: inline-block;
+            width: 200px;
+        }
+
+        .mycards {
+            margin: 50px auto 20px auto;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .category,
+        .nickname {
+            font-weight: 500;
+        }
+
+        button {
+            background-color: #eee;
+            color: #444;
+        }
+
+        .modifyBtn,
+        .deleteBtn {
+            background-color: #f2f2f2;
+            border: none;
+            border-radius: 15px;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 16px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modifyBtn:hover,
+        .deleteBtn:hover {
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+
+        .right-section {
+            float: right;
+        }
+        .search_ui {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .form-select {
+            width: 100%;
+            max-width: 150px;
+            height: 40px;
+            font-size: 14px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .form-floating {
+            flex-grow: 1;
+            height: 40px;
+            background-color: transparent;
+        }
+
+        .form-floating input {
+            height: 100%;
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            background-color: transparent;
+        }
+
+        .form-floating label {
+            top: 0;
+            left: 0;
+            font-size: 14px;
+            padding: 0.5rem;
+            pointer-events: none;
+            position: absolute;
+            transition: 0.3s ease-out;
+        }
+
+        .form-floating input:focus~label,
+        .form-floating input:not(:placeholder-shown)~label {
+            top: -1rem;
+            font-size: 12px;
+            color: #ffffff;
+        }
+
+        .btn {
+            height: 40px;
+            min-width: 70px;
+            font-size: 14px;
+            border-radius: 10px;
+            border: none;
+            background-color: #0d6efd;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #0b5ed7;
+        }
+
+        /* 레이어 팝업 */
+        #post-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            z-index: 40;
+            width: 800px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #post-box.show {
+            display: block;
+        }
+
+        #post-box .form-floating label,
+        #post-box .form-floating input,
+        #post-box .form-floating textarea {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        #post-box .form-floating label {
+            font-size: 16px;
+        }
+
+        #post-box .form-floating textarea {
+            height: 200px;
+            resize: none;
+        }
+
+        #post-box .input-group {
+            margin-bottom: 20px;
+        }
+
+        #post-box .mybtns {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #post-box .btn {
+            width: 100px;
+        }
+
+        #post-box .btn-outline-dark {
+            border-color: #343a40;
+            color: #343a40;
+        }
+
+        #post-box .btn-outline-dark:hover {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .btn,
+        .btn-outline-secondary {
+            z-index: -1;
+        }
+
+        .input-group .btn {
+            z-index: 0;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .bug_id {
+            font-weight: bold;
+            color: gray;
+            margin-right: 10px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .category {
+            font-style: italic;
+            margin-left: 10px;
+        }
+
+        .nickname {
+            margin-left: 10px;
+        }
+
+        h1 > a:link{
+            color: black;
+            text-decoration: none;
+        }
+
+        h1 > a:visited {
+            color: black;
+            text-decoration: none;
+        }
+
+        h1 > a:hover {
+            color: black;
+            text-decoration: none;
+        }
+
+    </style>
+    <script>
+        let isEditorOpen = false;
+        let editorMode = 'posting'; // 현재 작업이 새로운 데이터 저장인지, 기존 데이터 수정인지 구분하는 변수
+        let modifyingBugId; // 수정 중인 데이터의 id
+
+        let client_user_id = parseInt("{{ session['user_index' ]}}")
+        let client_user_nickname = "{{ session['user_nickname' ]}}"
+
+        let offset = 10 // 한 페이지에 들어갈 데이터 수
+        let page_button_num = 5 // 페이징 버튼에 들어갈 버튼 수
+        let page = 1 // 현재 페이지
+
+        $(document).ready(function () {
+            listing();
+        });
+
+        // read bug data
+        function listing() {
+            let formData = new FormData();
+            formData.append("page_give", page);
+            fetch('/get_bug', { method:"POST", body: formData}).then((res) => res.json()).then((data) => {
+                console.log(data['result'])
+                make_date_from_rows(data['result'])
+                makePagingButton(data['subdata'])
+            })
+        }
+
+        // 저장 or 수정 완료 버튼 클릭 이벤트
+        function posting() {
+            let formData = new FormData();
+            let title = $('#title').val();
+            let content = $('#content').val();
+            let category = $('#category').val();
+            formData.append("title_give", title);
+            formData.append("content_give", content);
+            formData.append("category_give", category);
+            formData.append("user_id_give", client_user_id);
+            formData.append("user_nickname_give", client_user_nickname);
+
+            if (editorMode == 'posting') {
+                fetch('/bug', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    alert(data['msg'])
+                    window.location.reload();
+                })
+            } else if (editorMode == 'modifying') {
+                formData.append('bug_id_give', modifyingBugId)
+                fetch('/bug_update', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    alert(data['msg'])
+                    window.location.reload();
+                })
+            }
+        }
+
+        // delete bug data
+        function deleting(bug_id) {
+            let realDelete = confirm('정말 삭제하시겠습니까?')
+            if (realDelete) {
+                let formData = new FormData();
+                formData.append('bug_id_give', bug_id)
+                fetch('/bug_delete', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    alert(data['msg'])
+                    window.location.reload();
+                })
+            }
+        }
+
+        // 등록 버튼 클릭 이벤트
+        function postBtn() {
+            if (isEditorOpen) {
+                close_box()
+            } else {
+                open_box()
+            }
+        }
+
+        function open_box() {
+            $('#post-box').show()
+            isEditorOpen = true;
+            setPosting()
+        }
+        function close_box() {
+            $('#post-box').hide()
+            isEditorOpen = false;
+        }
+
+        // 현재 에디터 모드를 저장 모드로 변경
+        function setPosting() {
+            editorMode = 'posting'
+            $('#confirmBtn').html('저장')
+            $('#title').val('')
+            $('#content').val('')
+            $('#category').find('option:first').prop('selected', true);
+        }
+
+        // 현재 에디터 모드를 수정 모드로 변경
+        function setModifying() {
+            editorMode = 'modifying'
+            $('#confirmBtn').html('수정')
+        }
+
+        // 버그 데이터 수정 버튼 클릭 이벤트
+        function modifying(bug_id) {
+            if (isEditorOpen == true) {
+                alert('입력창을 닫아주세요.')
+            } else if (isEditorOpen == false) {
+                $('#post-box').show()
+                isEditorOpen = true
+                modifyingBugId = bug_id
+                setModifying()
+                console.log(bug_id)
+
+                let formData = new FormData();
+                formData.append("bug_id_give", bug_id);
+                fetch('/modify', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    console.log(data['result'])
+                    let target_bug = data['result'];
+                    let bug_id = target_bug['id'];
+                    let title = target_bug['title'];
+                    let category = target_bug['category'];
+                    let nickname = target_bug['user_nickname'];
+                    let content = target_bug['content'];
+                    let user_id = target_bug['user_id'];
+                    $('#title').val(title)
+                    $('#content').val(content)
+                    $('#category').val(category).attr('selected', 'selected')
+                })
+            }
+        }
+
+        // search bug data
+        function search(to_page) {
+            page = to_page
+            let query = $('#query').val()
+            let category = $('#category_search').val()
+            let query_type = $('#query_type').val()
+            if (query == '' && category == '카테고리') {
+                $('#cards-box').empty();
+                listing()
+            } else {
+                let formData = new FormData();
+                formData.append("query_give", query);
+                formData.append("category_give", category);
+                formData.append("query_type_give", query_type);
+                formData.append("page_give", page);
+
+                fetch('/bug_search', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                    $('#cards-box').empty()
+                    console.log(data['result'])
+
+                    make_date_from_rows(data['result'])
+                    makePagingButton(data['subdata'])
+                })
+            }
+        }
+
+        // bug data rows를 바탕으로 html을 그려줌
+        function make_date_from_rows(rows) {
+            $('#cards-box').empty()
+            rows.forEach(row => {
+                // 필요 데이터
+                // 글 번호, 제목, 카테고리, 닉네임, 내용, 유저 아이디(숨김)
+                let bug_id = row['id'];
+                let title = row['title'];
+                let category = row['category'];
+                let nickname = row['user_nickname'];
+                let content = row['content'];
+                let user_id = row['user_id'];
+                let updateDeleteBtnHtml = ''
+                if (client_user_id == user_id) {
+                    updateDeleteBtnHtml = `<div class="right-section">
+                        <button class="modifyBtn" onclick="modifying()">수정</button>
+                        <button class="deleteBtn">삭제</button>
+                    </div>`
+                }
+                temp_html = `<div class="col">
+                    <div class="card h-100">
+                        <div class="card-body d-flex justify-content-between">
+                            <div class="left-section">
+                                <span class="bug_id">#${bug_id}</span>
+                                <h4 class="card-title">${title}</h4>
+                                <h6 class="card-subtitle mb-2 text-muted">${category}</h6>
+                                <p class="card-text"><small class="text-muted">작성자: ${nickname}</small></p>
+                            </div>
+                            ${updateDeleteBtnHtml}
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-link btn-sm" type="button" data-toggle="collapse" data-target="#collapseContent${bug_id}" aria-expanded="false" aria-controls="collapseContent${bug_id}">
+                                내용 보기
+                            </button>
+                        </div>
+                        <div class="collapse" id="collapseContent${bug_id}">
+                            <div class="card-body">
+                                <p class="content">${content}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                $('#cards-box').append(temp_html)
+            })
+        }
+
+        function makePagingButton(subdata) {
+            $('#paging_bar').empty()
+            let bug_count = subdata['bug_count']
+            let total_page_num = Math.ceil(bug_count/offset)
+            let first_page_inpagebar = parseInt((page-1)/page_button_num)*page_button_num+1
+            console.log(page)
+            console.log(bug_count)
+            console.log(total_page_num)
+            console.log(first_page_inpagebar)
+            console.log(parseInt((page-1)/page_button_num))
+            start_button = ``;
+            main_buttons =``;
+            end_button = ``;
+
+            if (page > page_button_num) {
+                start_button += `<li class="page-item">
+                                    <span class="page-link" aria-label="Previous" onclick="search(${1})">
+                                        <span aria-hidden="true">처음</span>
+                                    </span>
+                                </li>`
+                start_button += `<li class="page-item">
+                                    <span class="page-link" aria-label="Previous" onclick="search(${first_page_inpagebar-1})">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </span>
+                                </li>`
+            }
+
+            for (i = first_page_inpagebar; i < first_page_inpagebar+page_button_num; i++) {
+                if (i > total_page_num) {
+                    break
+                }
+                if (page == i) {
+                    main_buttons += `<li class="page-item active"><span class="page-link" onclick="search(${i})">${i}</span></li>`
+                } else {
+                    main_buttons += `<li class="page-item"><span class="page-link" onclick="search(${i})">${i}</span></li>`
+                }
+            }
+
+            if (first_page_inpagebar <= total_page_num - page_button_num) {
+                end_button += `<li class="page-item">
+                                    <span class="page-link" aria-label="Next" onclick="search(${first_page_inpagebar+page_button_num})">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </span>
+                                </li>`
+                end_button += `<li class="page-item">
+                                    <span class="page-link" aria-label="Next" onclick="search(${total_page_num})">
+                                        <span aria-hidden="true">마지막</span>
+                                    </span>
+                                </li>`
+            }
+
+            paging_button_html = `<nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        ${start_button}
+                                        ${main_buttons}
+                                        ${end_button}
+                                    </ul>
+                                </nav>`
+            $('#paging_bar').append(paging_button_html)
+        }
+
+
+        <!-- 레이어 팝업 -->
+        function resizeTextArea() {
+            var textarea = document.getElementById("content");
+            inputBox.style.height = inputBox.scrollHeight + "px";
+        }
+        function postBtn() {
+            document.getElementById("post-box").style.display = "block";
+        }
+
+        function close_box() {
+            document.getElementById("post-box").style.display = "none";
+        }
+        $(function () {
+            $('[data-bs-toggle="popover"]').popover();
+        });
+
+    </script>
+</head>
+
+<body>
+    <header class="mytitle">
+        <h1><a href="/">버그 데이터베이스</a></h1>
+        <nav>
+            <div class="btn-group">
+                <button class="btn_4" onclick="postBtn()">버그 등록하기</button>
+                {% if 'userid' in session %}
+                <span id="logout" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
+                    data-bs-trigger="hover focus" data-bs-content="Logout">
+                    <button onclick="location.href='/logout'" class="btn-round"><i
+                            class="fa-regular fa-user"></i></button>
+                </span>
+                {% else %}
+                <span id="loginbtn" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
+                    data-bs-trigger="hover focus" data-bs-content="Sign in">
+                    <button onclick="location.href='/login'" class="btn-round"><i
+                            class="fa-regular fa-user"></i></button>
+                </span>
+                <span id="registerbtn" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
+                    data-bs-trigger="hover focus" data-bs-content="Sign up">
+                    <button onclick="location.href='/register'" class="btn-round"><i
+                            class="fa-sharp fa-solid fa-clone"></i></button>
+                </span>
+
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- 게시글 작성 레이어팝업 -->
+    <div class="mypost" id="post-box" style="display: none;">
+        <div class="mypost-wrapper">
+            <div class="mypost-header">
+                <h2>버그 등록하기</h2>
+            </div>
+            <div class="mypost-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">카테고리</label>
+                        <select class="form-select" id="category">
+                            <option value="">-- 선택하기 --</option>
+                            <option value="python">python</option>
+                            <option value="html">html</option>
+                            <option value="css">css</option>
+                            <option value="javascript">javascript</option>
+                            <option value="프론트엔드">프론트엔드</option>
+                            <option value="백엔드">백엔드</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">내용</label>
+                        <textarea class="form-control" id="content" rows="5"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-dark" onclick="posting()">저장</button>
+                    <button type="button" class="btn btn-outline-dark" onclick="close_box()">닫기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 검색 -->
+    <div class="search_ui">
+        <div class="input-group">
+            <select class="form-select" id="category_search">
+                <option selected>카테고리</option>
+                <option value="python">python</option>
+                <option value="html">html</option>
+                <option value="css">css</option>
+                <option value="javascript">javascript</option>
+                <option value="프론트엔드">프론트엔드</option>
+                <option value="백엔드">백엔드</option>
+            </select>
+            <select class="form-select" id="query_type">
+                <option selected>내용</option>
+                <option value="제목">제목</option>
+                <option value="작성자">작성자</option>
+                <option value="내용+제목">내용+제목</option>
+                <option value="내용+제목+작성자">내용+제목+작성자</option>
+            </select>
+            <div class="form-floating mb-3" id="search_bar">
+                <input id="query" type="email" class="form-control" placeholder=".">
+                <label>Search..</label>
+            </div>
+            <button class="btn btn-outline-secondary" type="button" onclick="search(1)">검색</button>
+        </div>
+    </div>
+
+    <!-- 게시글 -->
+    <div class="mycards">
+        <div class="row row-cols-1 row-cols-md-1 g-1" id="cards-box">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body d-flex justify-content-between">
+                        <div class="left-section">
+                            <span class="bug_id">#글 번호</span>
+                            <span class="title">제목</span>
+                            <span class="category">카테고리</span>
+                            <span class="nickname">닉네임</span>
+                            <details>
+                                <summary>내용 보기</summary>
+                                <p class="content">내용</p>
+                            </details>
+                        </div>
+                        <div class="right-section">
+                            <button class="modifyBtn" onclick="modifying()">수정</button>
+                            <button class="deleteBtn">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 페이징 버튼 -->
+    <div id="paging_bar">
+    </div>
+</body>
+
+
+</html>
