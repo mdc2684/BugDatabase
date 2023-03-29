@@ -348,10 +348,16 @@
         }
 
         h1 > a:link{
+            color: black;
             text-decoration: none;
         }
 
         h1 > a:visited {
+            color: black;
+            text-decoration: none;
+        }
+
+        h1 > a:hover {
             color: black;
             text-decoration: none;
         }
@@ -365,8 +371,8 @@
         let client_user_id = 2
         let client_user_nickname = '이동환'
 
-        let offset = 2 // 한 페이지에 들어갈 데이터 수
-        let page_button_num = 2 // 페이징 버튼에 들어갈 버튼 수
+        let offset = 10 // 한 페이지에 들어갈 데이터 수
+        let page_button_num = 5 // 페이징 버튼에 들어갈 버튼 수
         let page = 1 // 현재 페이지
 
         $(document).ready(function () {
@@ -524,7 +530,7 @@
                 let content = row['content'];
                 let user_id = row['user_id'];
                 let updateDeleteBtnHtml = ''
-                if (client_user_id == user_id) {
+                if ("{{session['user_index']}}" == user_id) {
                     updateDeleteBtnHtml = `<button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
                                           <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>`
                 }
@@ -605,10 +611,6 @@
             $('#paging_bar').append(paging_button_html)
         }
 
-        function clickTitle() {
-            window.location.reload()
-        }
-
 
         <!-- 레이어 팝업 -->
         function resizeTextArea() {
@@ -631,7 +633,7 @@
 
 <body>
     <header class="mytitle">
-        <h1 onclick="clickTitle()"><a href="">버그 데이터베이스</a></h1>
+        <h1><a href="/">버그 데이터베이스</a></h1>
         <nav>
             <div class="btn-group">
                 <button class="btn_4" onclick="postBtn()">버그 등록하기</button>

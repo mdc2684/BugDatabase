@@ -13,8 +13,8 @@ def home():
 
 db = client.dbsparta
 
-offset = 2 # 한 페이지에 들어갈 데이터 수
-page_num = 2 # 페이징 버튼에 들어갈 버튼 수
+offset = 10 # 한 페이지에 들어갈 데이터 수
+page_num = 5 # 페이징 버튼에 들어갈 버튼 수
 page = 1 # 현재 페이지
 
 # create bug data
@@ -61,6 +61,8 @@ def login():
       user = db.user.find_one({'userid': userid_receive})
       if user and user['userpwd'] == userpw_receive:
          session['userid'] = userid_receive
+         session['user_index']
+         session['user_nickname']
          return render_template('index.html')
       else:
          flash('회원 정보가 일치하지 않습니다.')
