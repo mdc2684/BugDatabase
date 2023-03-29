@@ -443,32 +443,15 @@
             }
         }
 
-        // 등록 버튼 클릭 이벤트
-        function postBtn() {
-            if (isEditorOpen) {
-                close_box()
-            } else {
-                open_box()
-            }
-        }
-
-        function open_box() {
-            $('#post-box').show()
-            isEditorOpen = true;
-            setPosting()
-        }
-        function close_box() {
-            $('#post-box').hide()
-            isEditorOpen = false;
-        }
-
         // 현재 에디터 모드를 저장 모드로 변경
         function setPosting() {
-            editorMode = 'posting'
-            $('#confirmBtn').html('저장')
-            $('#title').val('')
-            $('#content').val('')
-            $('#category').find('option:first').prop('selected', true);
+            if (editorMode == 'modifying') {
+                editorMode = 'posting'
+                $('#confirmBtn').html('저장')
+                $('#title').val('')
+                $('#content').val('')
+                $('#category').find('option:first').prop('selected', true);
+            }
         }
 
         // 현재 에디터 모드를 수정 모드로 변경
@@ -640,17 +623,25 @@
         }
 
 
-        <!-- 레이어 팝업 -->
+        // 레이어 팝업
         function resizeTextArea() {
             var textarea = document.getElementById("content");
             inputBox.style.height = inputBox.scrollHeight + "px";
         }
+
         function postBtn() {
-            document.getElementById("post-box").style.display = "block";
+            if (isNaN(client_user_id)) {
+                alert('로그인 후 이용해주세요')
+            } else {
+                setPosting()
+                document.getElementById("post-box").style.display = "block";
+                // isEditorOpen = true;
+            }
         }
 
         function close_box() {
             document.getElementById("post-box").style.display = "none";
+            isEditorOpen = false;
         }
         $(function () {
             $('[data-bs-toggle="popover"]').popover();
@@ -716,7 +707,7 @@
                         <label for="content" class="form-label">내용</label>
                         <textarea class="form-control" id="content" rows="5"></textarea>
                     </div>
-                    <button type="button" class="btn btn-dark" onclick="posting()">저장</button>
+                    <button type="button" class="btn btn-dark" onclick="posting()" id="confirmBtn">저장</button>
                     <button type="button" class="btn btn-outline-dark" onclick="close_box()">닫기</button>
                 </form>
             </div>
