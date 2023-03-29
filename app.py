@@ -10,7 +10,7 @@ client = MongoClient(
 
 @app.route('/')
 def home():
-   return render_template('index.html')
+   return render_template('index.html', session=session)
 
 # client = MongoClient('mongodb+srv://sparta:test@cluster0.ia8rqcv.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
@@ -50,6 +50,7 @@ def bug_get():
     return jsonify({'result':all_bugs})
     
 # 로그인
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
    if request.method == 'POST':

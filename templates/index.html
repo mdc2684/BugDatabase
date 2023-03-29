@@ -11,11 +11,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script src="https://kit.fontawesome.com/4fc6b960de.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/4fc6b960de.js" crossorigin="anonymous"></script>
 
     <title>버그 데이터베이스</title>
 
@@ -45,13 +45,14 @@
         body {
             padding-top: 75px;
         }
+
         .btn-group {
             display: flex;
             align-items: center;
             margin-left: auto;
-          }
-          
-          .btn-round {
+        }
+
+        .btn-round {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -63,12 +64,12 @@
             color: #666;
             border: none;
             z-index: 1;
-          }
-          
-          .btn-round:hover {
+        }
+
+        .btn-round:hover {
             cursor: pointer;
             background-color: #e6e6e6;
-          }
+        }
 
         .btn_4 {
 
@@ -257,6 +258,7 @@
         .btn:hover {
             background-color: #0b5ed7;
         }
+
         /* 레이어 팝업 */
         #post-box {
             display: none;
@@ -314,30 +316,36 @@
             background-color: #343a40;
             color: #fff;
         }
-        .btn, .btn-outline-secondary{
-            z-index:-1;
+
+        .btn,
+        .btn-outline-secondary {
+            z-index: -1;
         }
-        .input-group .btn{
-            z-index:0;
+
+        .input-group .btn {
+            z-index: 0;
         }
-        
+
 
         .bug_id {
             font-weight: bold;
             color: gray;
             margin-right: 10px;
-          }
-          .title {
+        }
+
+        .title {
             font-size: 20px;
             font-weight: bold;
-          }
-          .category {
+        }
+
+        .category {
             font-style: italic;
             margin-left: 10px;
-          }
-          .nickname {
+        }
+
+        .nickname {
             margin-left: 10px;
-          }
+        }
     </style>
     <script>
         let isEditorOpen = false;
@@ -515,78 +523,88 @@
                 $('#cards-box').append(temp_html)
             })
         }
-<!-- 레이어 팝업 -->
+        <!-- 레이어 팝업 -->
         function resizeTextArea() {
             var textarea = document.getElementById("content");
             inputBox.style.height = inputBox.scrollHeight + "px";
         }
         function postBtn() {
             document.getElementById("post-box").style.display = "block";
-          }
-        
-          function close_box() {
+        }
+
+        function close_box() {
             document.getElementById("post-box").style.display = "none";
-          }
-          $(function() {
+        }
+        $(function () {
             $('[data-bs-toggle="popover"]').popover();
-          });
+        });
 
     </script>
 </head>
 
 <body>
-
     <header class="mytitle">
-        <h1>버그 데이터베이스 {{session['userid']}} <a href="/logout">로그아웃</a></h1>
+        <h1>버그 데이터베이스</h1>
         <nav>
-          <div class="btn-group">
-            <button class="btn_4" onclick="postBtn()">버그 등록하기</button>
-            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sign in">
-                <button class="btn-round"><i class="fa-regular fa-user"></i></button>
-              </span>
-              
-              <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sign up">
-                <button class="btn-round"><i class="fa-sharp fa-solid fa-clone"></i></button>
-              </span>
-            
-          </div>
+            <div class="btn-group">
+                <button class="btn_4" onclick="postBtn()">버그 등록하기</button>
+                {% if 'userid' in session %}
+                <span id="logout" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
+                    data-bs-trigger="hover focus" data-bs-content="Logout">
+                    <button onclick="location.href='/logout'" class="btn-round"><i
+                            class="fa-regular fa-user"></i></button>
+                </span>
+                {% else %}
+                <span id="loginbtn" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
+                    data-bs-trigger="hover focus" data-bs-content="Sign in">
+                    <button onclick="location.href='/login'" class="btn-round"><i
+                            class="fa-regular fa-user"></i></button>
+                </span>
+                <span id="registerbtn" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
+                    data-bs-trigger="hover focus" data-bs-content="Sign up">
+                    <button onclick="location.href='/register'" class="btn-round"><i
+                            class="fa-sharp fa-solid fa-clone"></i></button>
+                </span>
+
+                {% endif %}
+            </div>
         </nav>
-      </header>
-  
-  <!-- 게시글 작성 레이어팝업 -->
-  <div class="mypost" id="post-box" style="display: none;">
-    <div class="mypost-wrapper">
-      <div class="mypost-header">
-        <h2>버그 등록하기</h2>
-      </div>
-      <div class="mypost-body">
-        <form>
-          <div class="mb-3">
-            <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" id="title">
-          </div>
-          <div class="mb-3">
-            <label for="category" class="form-label">카테고리</label>
-            <select class="form-select" id="category">
-              <option value="">-- 선택하기 --</option>
-              <option value="python">python</option>
-              <option value="html">html</option>
-              <option value="css">css</option>
-              <option value="javascript">javascript</option>
-              <option value="프론트엔드">프론트엔드</option>
-              <option value="백엔드">백엔드</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="content" class="form-label">내용</label>
-            <textarea class="form-control" id="content" rows="5"></textarea>
-          </div>
-          <button type="button" class="btn btn-dark" onclick="posting()">저장</button>
-          <button type="button" class="btn btn-outline-dark" onclick="close_box()">닫기</button>
-        </form>
-      </div>
+    </header>
+
+    <!-- 게시글 작성 레이어팝업 -->
+    <div class="mypost" id="post-box" style="display: none;">
+        <div class="mypost-wrapper">
+            <div class="mypost-header">
+                <h2>버그 등록하기</h2>
+            </div>
+            <div class="mypost-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">카테고리</label>
+                        <select class="form-select" id="category">
+                            <option value="">-- 선택하기 --</option>
+                            <option value="python">python</option>
+                            <option value="html">html</option>
+                            <option value="css">css</option>
+                            <option value="javascript">javascript</option>
+                            <option value="프론트엔드">프론트엔드</option>
+                            <option value="백엔드">백엔드</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">내용</label>
+                        <textarea class="form-control" id="content" rows="5"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-dark" onclick="posting()">저장</button>
+                    <button type="button" class="btn btn-outline-dark" onclick="close_box()">닫기</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
     <!-- 검색 -->
     <div class="search_ui">
         <div class="input-group">
