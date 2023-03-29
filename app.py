@@ -67,6 +67,8 @@ def login():
 
       if user:
          session['userid'] = userid_receive
+         session['user_index'] = user['user_index']
+         session['user_nickname'] = user['usernickname']
          return render_template('index.html')
       else:
          flash('회원 정보가 일치하지 않습니다.')
