@@ -45,14 +45,13 @@
 
         .mypic {
             width: 100%;
-            height: 800px;
-
+            height: 100vh;
             background-image: linear-gradient(0deg,
                     rgba(0, 0, 0, 0.5),
                     rgba(0, 0, 0, 0.5)),
                 url("https://images.unsplash.com/photo-1621252179027-94459d278660?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80");
             background-position: center;
-            background-size: auto;
+            background-size: cover;
 
             color: white;
 
@@ -67,8 +66,8 @@
     <script>
         function validateForm() {
             var userid = document.forms["loginForm"]["userid"].value;
-            var userpw = document.forms["loginForm"]["userpw"].value;
-            if (userid == "" || userpw == "") {
+            var userpwd = document.forms["loginForm"]["userpwd"].value;
+            if (userid == "" || userpwd == "") {
                 alert("Please fill in all the fields");
                 return false;
             }
@@ -98,13 +97,13 @@
                         <label for="password">
                             Password
                         </label>
-                        <input type="password" name="userpw" id="userpw" class="form-control input-block"
+                        <input type="password" name="userpwd" id="userpwd" class="form-control input-block"
                             autocomplete="off">
                         <button class="btn btn-success btn-block" name="login" id="login" type="submit">Submit</button>
                     </div>
                 </form>
             </div>
-            <p>New to Bug Database? <a href="/templates/register.html">Create an account</a>.</p>
+            <p>New to Bug Database? <a href="/register">Create an account</a>.</p>
         </div>
 
         </div>
