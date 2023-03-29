@@ -67,17 +67,14 @@ def login():
       userpwd_receive = request.form['userpwd']
 
       userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
-
       user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
 
       if user['userpwd'] == userpwd_hash:
          session['userid'] = userid_receive
-         session['user_index'] = user['user_index']
-         session['user_nickname'] = user['usernickname']
          return render_template('index.html')
       else:
          flash('회원 정보가 일치하지 않습니다.')
-         return redirect(url_for('login'))
+         return render_template('login.html')
    else:
       return render_template('login.html')
 # 로그아웃
@@ -194,4 +191,4 @@ def paging():
     return 0
     
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5080, debug=True)
