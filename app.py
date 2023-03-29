@@ -19,10 +19,6 @@ offset = 10 # 한 페이지에 들어갈 데이터 수
 page_num = 5 # 페이징 버튼에 들어갈 버튼 수
 page = 1 # 현재 페이지
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
 # create bug data
 @app.route("/bug", methods=["POST"])
 def insert_bug():
@@ -157,14 +153,6 @@ def register():
 @app.route("/register", methods=["GET"])
 def register_form():
    return render_template('register.html')
-
-@app.route("/login", methods=["GET"])
-def login_form():
-   return render_template('login.html')
-
-@app.route("/login", methods=["POST"])
-def login():
-   return jsonify({'msg': '로그인 완료!'})
 
 # paging read와 search에 넣기
 def paging():
