@@ -547,8 +547,8 @@
                 let updateDeleteBtnHtml = ''
                 if (client_user_id == user_id) {
                     updateDeleteBtnHtml = `<div class="right-section">
-                        <button class="modifyBtn" onclick="modifying()">수정</button>
-                        <button class="deleteBtn">삭제</button>
+                        <button class="modifyBtn" onclick="modifying(${bug_id})">수정</button>
+                        <button class="deleteBtn" onclick="deleting(${bug_id})">삭제</button>
                     </div>`
                 }
                 temp_html = `<div class="col">
