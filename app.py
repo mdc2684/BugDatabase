@@ -164,12 +164,6 @@ def register():
     id_exist = bool(db.user.find_one({"userid": userid_receive}))
     print(id_exist)
     if id_exist:
-        return jsonify({'msg': '중복입니다!'})
-
-
-    id_exist = bool(db.user.find_one({"userid": userid_receive}))
-    print(id_exist)
-    if id_exist:
         
         return jsonify({'msg': '중복입니다!'})
     
