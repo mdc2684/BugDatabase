@@ -1,2 +1,97 @@
 # BugDatabase Repository
-동환 README 변경
+# 1. 프로젝트 명
+
+버그 데이터베이스(Bug Database)
+
+# 2. 소개
+
+- 개발 중 발견한 버그를 작성해 저장하고 공유하는 게시판 커뮤니티 서비스
+- 프로젝트 선정 이유 : 개발을 하는 우리가 실제로 유용하게 사용할 수 있는 서비스가 없을까 고민했고, 버그 추적 시스템이 간단하게 만든다면 현재 우리가 알고 있는 기술 스택으로도 충분히 만들 수 있을 거라고 생각이 들어서 선정했습니다.
+
+# 3. 와이어 프레임
+
+### 1) Login
+
+![login page.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d776636d-5844-470e-b472-e73ea9ab6aba/login_page.png)
+
+### 2) Register
+
+![Register page.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cf5fb9f2-3cf2-4810-bba1-f91b2e576255/Register_page.png)
+
+### 3) Main
+
+![main page.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/de6a850f-1cbc-4693-9e79-0c0a40966cdf/main_page.png)
+
+# 4. 개발해야 하는 기능들
+
+| 우선 순위 | 기능 | Method | URL | request | response |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 회원가입 | POST | /resister | userid,userpwd,usernickname,useremail1,useremail2 | 가입 완료 메세지
+아이디 중복 메세지
+비밀번호8~20글자 메시지
+비밀번호 특수문자+영문+숫자조합 메시지 |
+| 2 | 로그인 | GET, POST | /login | jsonify({'result': ''})
++ hash | alert + window.location.href = "" |
+| 3 | 글 목록 조회 (Read) | POST | /main | page | bugs 데이터 리스트, bug_count |
+| 3 | 글 작성 (Create) | POST | /main | title,
+category,
+content,
+user_id,
+user_nickname | 작성 완료 메시지 |
+| 3 | 글 수정 (Update) | POST | /main | bug_id,
+title,
+category,
+content,
+user_id,
+user_nickname | 수정 완료 메시지 |
+| 3 | 글 삭제 (Delete) | POST | /main | bug_id | 삭제 완료 메시지 |
+| 4 | 글 검색 ( Search) | POST | /main | page,
+query,
+title,
+category,
+content,
+user_nickname | bugs 데이터 리스트, bug_count |
+
+# 5. public Github repo
+
+[https://github.com/mdc2684/BugDatabase](https://github.com/mdc2684/BugDatabase)
+
+## 6. 영상 시연:
+
+[항해99 14기 23조 토이 프로젝트 영상](https://youtu.be/OlAYpqw7iqk)
+
+## 7. AWS 배포:
+
+[버그 데이터베이스](http://bugdatabase.eba-648gegev.ap-northeast-2.elasticbeanstalk.com/)
+
+# 8. KPT
+
+---
+
+## Keep
+
+- API의 기능의 한계에 부딪혔을 때 새로운 로직으로 다시 갈아엎어서 새로운 기능들을 구현할 수 있는 집념이 있었다.
+- 서로 만든 기능들을 모두가 테스트해서 진행자가 알아차리지 못한 버그를 알려주고 고쳐나갔다.
+- Deadline을 지킬 수 있도록 하루일과 전, 후 2번 고정 미팅을 통해 현재의 상황을 브리핑하였다.
+    - Notion에서 우선순위를 정하며 완성에 초점을 두었다.
+- 협업 분위기
+    - 팀 분위기가 좋아 모두 이번 프로젝트를 즐겼다. 새로운 기능 추가에 대한 의견들을 자유롭게 낼 수 있었다.
+
+## Problem
+
+- MyPage 기능 필요하다고 느꼈다.
+- 스크립트공격 막기 ( 정규표현식을 이용한 XSS우회기법 )
+- JWT를 이용한 회원가입
+- 버그를 뒤늦게 발견해서 급하게 고친점이 제대로 못고친 것도 있고 해서 아쉬웠다.
+- 버그 추적장치를 사용할 때 어떻게 하면 더 유용하게 사용할 수 있을지 고민해서 기능을 고도화시키면 좋을 것 같은데 그 과정을 하지 못해서 아쉬웠다.
+- 데이터베이스에 넣는 데이터도 실제로 개발하면서 발생한 버그를 입력하고 싶었는데 테스트 용 데이터를 많이 채웠던 것 같다.
+- 회원가입 시, 비밀번호 입력을 실수했을때 막을 수 없어 아쉬웠다. ( 비밀번호 확인 기능 필요)
+- 버그의 카테고리를 서비스에서 정해놓은 것만 선택하는 게 아니라 입력하는 사람이 직접 만들어서 적을 수 있게 해야 좋을 것 같다.
+
+## Try
+
+- 기능 하나하나 만들때마다 여러가지 테스트를 바로바로 해봐야겠다.
+- Mypage에서 이미지로 프로필을 변경하고자 할 때 이미지 파일을 업로드하는 방법보다 Link를 이용하는 방법도 있다.
+- XSS 공격을 막기 위해 입력 값 제한이나 치환을 통해 <script>등의 태그를 막아야 한다.
+- 회원가입 시, 비밀번호 체크 기능을 만들어야겠다.
+- 기획과 관련해서 ‘왜?’ 라는 질문을 많이 했으면 좋았을 것 같다.
