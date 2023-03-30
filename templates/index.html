@@ -262,6 +262,38 @@
             background-color: #0b5ed7;
         }
 
+        #confirmBtn {
+            height: 40px;
+            min-width: 70px;
+            font-size: 14px;
+            border-radius: 10px;
+            border: none;
+            background-color: #0d6efd;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #confirmBtn:hover {
+            background-color: #0b5ed7;
+        }
+
+        #cancelBtn {
+            height: 40px;
+            min-width: 70px;
+            font-size: 14px;
+            border-radius: 10px;
+            border: none;
+            background-color: #212529;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #cancelBtn:hover {
+            background-color: #424649;
+        }
+
         /* 레이어 팝업 */
         #post-box {
             display: none;
@@ -733,8 +765,8 @@
                         <label for="content" class="form-label">내용</label>
                         <textarea class="form-control" id="content" rows="5"></textarea>
                     </div>
-                    <button type="button" class="btn btn-dark" onclick="posting()" id="confirmBtn">저장</button>
-                    <button type="button" class="btn btn-outline-dark" onclick="close_box()">닫기</button>
+                    <button type="button" class="btn btn-danger" onclick="posting()" id="confirmBtn">저장</button>
+                    <button type="button" class="btn btn-secondary" onclick="close_box()" id="cancelBtn">닫기</button>
                 </form>
             </div>
         </div>
