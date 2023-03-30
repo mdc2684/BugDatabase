@@ -151,6 +151,11 @@ def register():
     useremail1_receive = request.form['useremail1_give']
     useremail2_receive = request.form['useremail2_give']
 
+    id_exist = bool(db.user.find_one({"userid": userid_receive}))
+    print(id_exist)
+    if id_exist:
+        return jsonify({'msg': '중복입니다!'})
+
 
     userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
 

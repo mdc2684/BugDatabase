@@ -125,8 +125,13 @@
             formData.append("useremail2_give", useremail2);
 
             fetch('/register', { method: "POST", body: formData, }).then((res) => res.json()).then((data) => {
-                alert(data["msg"]);
-                window.location.replace('/login')
+                if (data["msg"] == '중복입니다!') {
+                    alert('이미 사용중인 ID입니다.')
+                    //window.location.replace('/register')
+                } else {
+                    alert(data["msg"]);
+                    window.location.replace('/login')
+                }
             });
         }
 
