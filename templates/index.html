@@ -410,23 +410,32 @@
             let title = $('#title').val();
             let content = $('#content').val();
             let category = $('#category').val();
-            formData.append("title_give", title);
-            formData.append("content_give", content);
-            formData.append("category_give", category);
-            formData.append("user_id_give", client_user_id);
-            formData.append("user_nickname_give", client_user_nickname);
 
-            if (editorMode == 'posting') {
-                fetch('/bug', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
-                    alert(data['msg'])
-                    window.location.reload();
-                })
-            } else if (editorMode == 'modifying') {
-                formData.append('bug_id_give', modifyingBugId)
-                fetch('/bug_update', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
-                    alert(data['msg'])
-                    window.location.reload();
-                })
+            if (title == '') {
+                alert('제목을 입력해주세요')
+            } else if (category == '') {
+                alert('카테고리를 선택해주세요')
+            } else if (content == '') {
+                alert('내용을 입력해주세요')
+            } else {
+                formData.append("title_give", title);
+                formData.append("content_give", content);
+                formData.append("category_give", category);
+                formData.append("user_id_give", client_user_id);
+                formData.append("user_nickname_give", client_user_nickname);
+
+                if (editorMode == 'posting') {
+                    fetch('/bug', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                        alert(data['msg'])
+                        window.location.reload();
+                    })
+                } else if (editorMode == 'modifying') {
+                    formData.append('bug_id_give', modifyingBugId)
+                    fetch('/bug_update', { method: "POST", body: formData }).then((res) => res.json()).then((data) => {
+                        alert(data['msg'])
+                        window.location.reload();
+                    })
+                }
             }
         }
 
