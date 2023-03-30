@@ -23,34 +23,8 @@
 
 
 # 4. 개발해야 하는 기능들
+<img width="967" alt="스크린샷 2023-03-30 오후 8 19 18" src="https://user-images.githubusercontent.com/111736036/228820209-a60857f7-1e2e-48b5-b3b4-7fad50e90ab0.png">
 
-| 우선 순위 | 기능 | Method | URL | request | response |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 회원가입 | POST | /resister | userid,userpwd,usernickname,useremail1,useremail2 | 가입 완료 메세지
-아이디 중복 메세지
-비밀번호8~20글자 메시지
-비밀번호 특수문자+영문+숫자조합 메시지 |
-| 2 | 로그인 | GET, POST | /login | jsonify({'result': ''})
-+ hash | alert + window.location.href = "" |
-| 3 | 글 목록 조회 (Read) | POST | /main | page | bugs 데이터 리스트, bug_count |
-| 3 | 글 작성 (Create) | POST | /main | title,
-category,
-content,
-user_id,
-user_nickname | 작성 완료 메시지 |
-| 3 | 글 수정 (Update) | POST | /main | bug_id,
-title,
-category,
-content,
-user_id,
-user_nickname | 수정 완료 메시지 |
-| 3 | 글 삭제 (Delete) | POST | /main | bug_id | 삭제 완료 메시지 |
-| 4 | 글 검색 ( Search) | POST | /main | page,
-query,
-title,
-category,
-content,
-user_nickname | bugs 데이터 리스트, bug_count |
 
 # 5. public Github repo
 
