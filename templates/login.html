@@ -1,11 +1,3 @@
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<script>
-    alert("{{messages[-1]}}")
-</script>
-{% endif %}
-{% endwith %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -64,14 +56,40 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        function validateForm() {
-            var userid = document.forms["loginForm"]["userid"].value;
-            var userpwd = document.forms["loginForm"]["userpwd"].value;
-            if (userid == "" || userpwd == "") {
-                alert("Please fill in all the fields");
-                return false;
-            }
-        }            
+        // function validateForm() {
+        //     var userid = document.forms["loginForm"]["userid"].value;
+        //     var userpwd = document.forms["loginForm"]["userpwd"].value;
+        //     if (userid == "" || userpwd == "") {
+        //         alert("Please fill in all the fields");
+        //         return false;
+        //     }
+        // }
+        function login() {
+            let userid = $('#userid').val()
+            let userpwd = $('#userpwd').val()
+
+            let formData = new FormData();
+            formData.append("userid_give", userid);
+            formData.append("userpwd_give", userpwd);
+
+            fetch('/login', { method: "POST", body: formData })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.result == 'success') {
+                        alert("Welcome to BugDatabase!");
+                        window.location.href = "/";
+                    } else if (userid == "" || userpwd == "") {
+                        alert("There's Empty Spaces");
+                    }
+                    else {
+                        alert("Incorrect username or password.");
+                    }
+                })
+                .catch((error) => {
+                    alert("서버 오류: " + error);
+                });
+        }
+
     </script>
 
 </head>
@@ -85,21 +103,22 @@
                 </div>
             </div>
             <div class="auth-form-body mt-3">
-                <form method="POST" action="{{url_for('login')}}" name="loginForm" onsubmit="return validateForm()">
+                <!-- action="{{url_for('login')}}" onsubmit="return validateForm()" -->
+                <form method="POST" name="loginForm">
                     <div class="position-relative">
                         <label for="id">
                             ID
                         </label>
-                        <input type="text" name="userid" id="userid" class="form-control input-block"
+                        <input type="text" name="userid_give" id="userid" class="form-control input-block"
                             autocomplete="off">
                     </div>
                     <div class="position-relative">
                         <label for="password">
                             Password
                         </label>
-                        <input type="password" name="userpwd" id="userpwd" class="form-control input-block"
+                        <input type="password" name="userpwd_give" id="userpwd" class="form-control input-block"
                             autocomplete="off">
-                        <button class="btn btn-success btn-block" name="login" id="login" type="submit">Submit</button>
+                        <button onclick="login()" class="btn btn-success btn-block" type="button">Submit</button>
                     </div>
                 </form>
             </div>
