@@ -60,21 +60,32 @@ def bug_get():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
    if request.method == 'POST':
-      userid_receive = request.form['userid']
-      userpwd_receive = request.form['userpwd']
+      userid_receive = request.form['userid_give']
+      userpwd_receive = request.form['userpwd_give']
       userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
       user = db.user.find_one({'userid': userid_receive, 'userpwd': userpwd_hash})
 
-      if user:
+      if user is not None:
          session['userid'] = userid_receive
          session['user_index'] = user['user_index']
          session['user_nickname'] = user['usernickname']
-         return render_template('index.html')
+         return jsonify({'result': 'success'})
       else:
-         flash('회원 정보가 일치하지 않습니다.')
-         return render_template('login.html')
+          return jsonify({'result': 'fail'})
    else:
       return render_template('login.html')
+
+
+#       if user:
+        #  session['userid'] = userid_receive
+        #  session['user_index'] = user['user_index']
+        #  session['user_nickname'] = user['usernickname']
+#          return render_template('index.html')
+#       else:
+#          return jsonify({'msg': '회원정보가 일치하지 않습니다.'})
+#         #  return render_template('login.html')
+#    else:
+#       return render_template('login.html')
      
 # 로그아웃
 @app.route("/logout")
@@ -196,4 +207,4 @@ def paging():
     return 0
     
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5500, debug=True)
+    app.run('0.0.0.0', port=5009, debug=True)
