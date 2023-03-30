@@ -376,6 +376,10 @@
             text-decoration: none;
         }
 
+        #user_nickname {
+            margin-right: 10px;
+        }
+
     </style>
     <script>
         let isEditorOpen = false;
@@ -664,6 +668,13 @@
         <h1><a href="/">버그 데이터베이스</a></h1>
         <nav>
             <div class="btn-group">
+                {% if 'userid' in session %}
+                <span id="user_nickname">
+                    Signed in as
+                    </br>
+                    {{session['user_nickname']}}
+                </span>
+                {% endif %}
                 <button class="btn_4" onclick="postBtn()">버그 등록하기</button>
                 {% if 'userid' in session %}
                 <span id="logout" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
