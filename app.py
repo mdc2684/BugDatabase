@@ -28,7 +28,7 @@ page = 1 # 현재 페이지
 def insert_bug():
     title_receive = request.form['title_give']
     category_receive = request.form['category_give']
-    content_receive = request.form['content_give']
+    content_receive = request.form['content_give'].replace('\n', '<br>')  # 줄바꿈 문자를 HTML 태그로 변환
     user_id_receive = request.form['user_id_give']
     user_nickname_receive = request.form['user_nickname_give']
 
@@ -89,7 +89,7 @@ def update_bug():
     bug_id_receive = int(request.form['bug_id_give'])
     title_receive = request.form['title_give']
     category_receive = request.form['category_give']
-    content_receive = request.form['content_give']
+    content_receive = request.form['content_give'].replace('<br>', '')  # <br> 태그 제거
     user_id_receive = request.form['user_id_give']
     user_nickname_receive = request.form['user_nickname_give']
 
@@ -162,8 +162,14 @@ def register():
     useremail2_receive = request.form['useremail2_give']
 
 
-    userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
+    id_exist = bool(db.user.find_one({"userid": userid_receive}))
+    print(id_exist)
+    if id_exist:
+        
+        return jsonify({'msg': '중복입니다!'})
+    
 
+    userpwd_hash = hashlib.sha256(userpwd_receive.encode('utf-8')).hexdigest()
 
     userindex = db.auto_increment.find_one()['user_index']
     db.auto_increment.update_one({'user_index':userindex}, {'$set':{'user_index':userindex+1}})
