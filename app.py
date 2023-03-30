@@ -28,7 +28,7 @@ page = 1 # 현재 페이지
 def insert_bug():
     title_receive = request.form['title_give']
     category_receive = request.form['category_give']
-    content_receive = request.form['content_give']
+    content_receive = request.form['content_give'].replace('\n', '<br>')  # 줄바꿈 문자를 HTML 태그로 변환
     user_id_receive = request.form['user_id_give']
     user_nickname_receive = request.form['user_nickname_give']
 
@@ -89,7 +89,7 @@ def update_bug():
     bug_id_receive = int(request.form['bug_id_give'])
     title_receive = request.form['title_give']
     category_receive = request.form['category_give']
-    content_receive = request.form['content_give']
+    content_receive = request.form['content_give'].replace('<br>', '')  # <br> 태그 제거
     user_id_receive = request.form['user_id_give']
     user_nickname_receive = request.form['user_nickname_give']
 
