@@ -669,6 +669,12 @@
         <nav>
             <div class="btn-group">
                 {% if 'userid' in session %}
+                <!-- 프로필 이미지 영역인데 시간이 없을 것 같음 -->
+                <!-- <span id="logout" class="d-inline-block" tabindex="0" data-bs-toggle="popover"
+                    data-bs-trigger="hover focus" data-bs-content="프로필 이미지 변경">
+                    <button onclick="" class="btn-round"><i
+                            class="fa-regular fa-user"></i></button>
+                </span> -->
                 <span id="user_nickname">
                     Signed in as
                     </br>
@@ -763,26 +769,6 @@
     <!-- 게시글 -->
     <div class="mycards">
         <div class="row row-cols-1 row-cols-md-1 g-1" id="cards-box">
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body d-flex justify-content-between">
-                        <div class="left-section">
-                            <span class="bug_id">#글 번호</span>
-                            <span class="title">제목</span>
-                            <span class="category">카테고리</span>
-                            <span class="nickname">닉네임</span>
-                            <details>
-                                <summary>내용 보기</summary>
-                                <p class="content">내용</p>
-                            </details>
-                        </div>
-                        <div class="right-section">
-                            <button class="modifyBtn" onclick="modifying()">수정</button>
-                            <button class="deleteBtn">삭제</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- 페이징 버튼 -->
