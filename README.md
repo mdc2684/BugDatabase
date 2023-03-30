@@ -1,4 +1,6 @@
 # BugDatabase Repository
+# 23조 토이프로젝트(2022.03.27~)
+
 # 1. 프로젝트 명
 
 버그 데이터베이스(Bug Database)
@@ -11,16 +13,14 @@
 # 3. 와이어 프레임
 
 ### 1) Login
-
-![login page.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d776636d-5844-470e-b472-e73ea9ab6aba/login_page.png)
+<img width="743" alt="login_page" src="https://user-images.githubusercontent.com/111736036/228819763-b137e407-12e8-47cc-a13f-bcde3d3db54c.png">
 
 ### 2) Register
-
-![Register page.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cf5fb9f2-3cf2-4810-bba1-f91b2e576255/Register_page.png)
+<img width="990" alt="Register_page" src="https://user-images.githubusercontent.com/111736036/228819838-46af719b-80f7-4d10-9b72-96c8a3e05a4d.png">
 
 ### 3) Main
+<img width="990" alt="Register_page" src="https://user-images.githubusercontent.com/111736036/228819891-809ef76c-eb5e-46c9-bb3e-3926c6142552.png">
 
-![main page.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/de6a850f-1cbc-4693-9e79-0c0a40966cdf/main_page.png)
 
 # 4. 개발해야 하는 기능들
 
